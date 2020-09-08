@@ -1,13 +1,7 @@
 # Import packages
 import numpy as np
 import pandas as pd
-
-# Load Cardiovascular disease data using pandas
-filename = '../Data/CVD-data.csv'
-df = pd.read_csv(filename)
-
-# Convert data from dataframe (df) to a numpy array
-data = df.to_numpy()
+from main import *
 
 # Data contains 13 features and 299 observations
 
@@ -27,4 +21,4 @@ data = df.to_numpy()
 # 12 = death event              - boolean
 
 # Gets the age of observation 0
-#print(data[0,0])
+print(data[0,0])
