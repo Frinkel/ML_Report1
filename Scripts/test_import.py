@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from main import *
 from enum import Enum
 
+
 # Data contains 13 features and 299 observations
 
 ## Features:
@@ -32,16 +33,28 @@ class feature:
     HBP = 5
 
 
-
 # Gets the age of observation 0
-#print(data[:, 0])
+# print(data[:, 0])
 
-#plt.plot(data[:, 0], data[:, 6], 'o')
-#plt.show()
+# plt.plot(data[:, 0], data[:, 6], 'o')
+# plt.show()
 
 # Print certain type of data that is above a threshold
-type = 6
+feature_type = 0
 threshold = 600000
-for c in data:
-    if (c[type] > threshold):
-        print(f"Age: {c[feature.age]}, Creatine: {c[2]}, Is a smoker: {bool(c[10])}, Woman/Man: {c[9]}")
+
+# Print certain type of data that is above a threshold
+def thresholdExtraction(fdata, ftype, fthreshold):
+    for c in fdata:
+        if (c[ftype] >= fthreshold):
+            print(f"Age: {c[feature.age]}, Creatine: {c[2]}, Is a smoker: {bool(c[10])}, Woman/Man: {c[9]}")
+
+
+# Cal culate the mean of a column
+def mean(fdata, fcol):
+    fmean = sum(fdata[:, fcol]) / fdata.shape[0]
+    return fmean
+
+
+print(f"Mean:  {mean(data, feature_type)}")
+thresholdExtraction(data, feature_type, mean(data, feature_type))
