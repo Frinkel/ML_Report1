@@ -1,7 +1,9 @@
 # Import packages
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from main import *
+from enum import Enum
 
 # Data contains 13 features and 299 observations
 
@@ -20,5 +22,26 @@ from main import *
 # 11 = time                     - int
 # 12 = death event              - boolean
 
+# Enumerate the different features
+class feature:
+    age = 0
+    anaemia = 1
+    creatine = 2
+    diabetes = 3
+    eject_fract = 4
+    HBP = 5
+
+
+
 # Gets the age of observation 0
-print(data[0,0])
+#print(data[:, 0])
+
+#plt.plot(data[:, 0], data[:, 6], 'o')
+#plt.show()
+
+# Print certain type of data that is above a threshold
+type = 6
+threshold = 600000
+for c in data:
+    if (c[type] > threshold):
+        print(f"Age: {c[feature.age]}, Creatine: {c[2]}, Is a smoker: {bool(c[10])}, Woman/Man: {c[9]}")
