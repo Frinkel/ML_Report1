@@ -43,8 +43,9 @@ class feature:
 feature_type = 0
 threshold = 600000
 
+
 # Print certain type of data that is above a threshold
-def thresholdExtraction(fdata, ftype, fthreshold):
+def threshold_extraction(fdata, ftype, fthreshold):
     for c in fdata:
         if (c[ftype] >= fthreshold):
             print(f"Age: {c[feature.age]}, Creatine: {c[2]}, Is a smoker: {bool(c[10])}, Woman/Man: {c[9]}")
@@ -57,4 +58,4 @@ def mean(fdata, fcol):
 
 
 print(f"Mean:  {mean(data, feature_type)}")
-thresholdExtraction(data, feature_type, mean(data, feature_type))
+# threshold_extraction(data, feature_type, mean(data, feature_type))
