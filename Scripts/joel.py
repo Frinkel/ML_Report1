@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from main import *
-from enum import Enum
+import enum
 
 
 # Data contains 13 features and 299 observations
@@ -24,7 +24,7 @@ from enum import Enum
 # 12 = death event              - boolean
 
 # Enumerate the different features
-class feature:
+class Feature(enum.Enum):
     age = 0
     anaemia = 1
     creatine = 2
@@ -47,13 +47,33 @@ plt.plot(data[:, 0], data[:, 2], 'o')
 plt.title('Creatine explained by Age');
 plt.xlabel('Age');
 plt.ylabel('Creatine');
-# plt.legend(['Individual'])
+plt.legend(['Individual'])
 plt.show()
 
-# Print certain type of data that is above a threshold
-feature_type = 0
-threshold = 600000
+# Joel has features 1, 2, 3, 4
 
 
-print(np.mean(data[:, 0]))
+# FEATURE 02 - ANAEMIA
 
+# Desc:
+# Having decreased amount of red blood cells or hemoglobin
+for x in range(4):
+    feat = Feature(x+1)
+    print(f"## {feat.name.upper()} ##")
+    print(f"    Mean: {np.mean(data[:, feat.value])}")
+    print(f"    Median: {np.median(data[:, feat.value])}")
+    print(f"    STD: {np.std(data[:, feat.value])}")
+    print(f"    Variance {np.var(data[:, feat.value])}")
+    print(f"    Correlation with age: {np.corrcoef(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
+
+
+
+# Line skip
+print("\n")
+
+# FEATURE 03 - CREATINE
+
+# Desc:
+#
+# print("## CREATINE ##")
+# print(f"    Mean: {np.mean(data[:, Feature.creatine.value])}")
