@@ -39,9 +39,8 @@ class Feature(enum.Enum):
     time = 11
     death = 12
 
-
 # Gets the age of observation 0
-# print(data[:, 0])
+# print(data[:, 2])
 
 plt.plot(data[:, 0], data[:, 2], 'o')
 plt.title('Creatine explained by Age');
