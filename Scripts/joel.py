@@ -31,31 +31,29 @@ class feature:
     diabetes = 3
     eject_fract = 4
     HBP = 5
+    platelets = 6
+    ser_creatine = 7
+    ser_sodium = 8
+    sex = 9
+    smoking = 10
+    time = 11
+    death = 12
 
 
 # Gets the age of observation 0
 # print(data[:, 0])
 
-# plt.plot(data[:, 0], data[:, 6], 'o')
-# plt.show()
+plt.plot(data[:, 0], data[:, 2], 'o')
+plt.title('Creatine explained by Age');
+plt.xlabel('Age');
+plt.ylabel('Creatine');
+# plt.legend(['Individual'])
+plt.show()
 
 # Print certain type of data that is above a threshold
 feature_type = 0
 threshold = 600000
 
 
-# Print certain type of data that is above a threshold
-def threshold_extraction(fdata, ftype, fthreshold):
-    for c in fdata:
-        if (c[ftype] >= fthreshold):
-            print(f"Age: {c[feature.age]}, Creatine: {c[2]}, Is a smoker: {bool(c[10])}, Woman/Man: {c[9]}")
+print(np.mean(data[:, 0]))
 
-
-# Cal culate the mean of a column
-def mean(fdata, fcol):
-    fmean = sum(fdata[:, fcol]) / fdata.shape[0]
-    return fmean
-
-
-print(f"Mean:  {mean(data, feature_type)}")
-# threshold_extraction(data, feature_type, mean(data, feature_type))
