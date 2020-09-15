@@ -45,9 +45,9 @@ class Feature(enum.Enum):
 
 plt.plot(data[:, 0], data[:, 2], 'o')
 plt.title('Creatine explained by Age');
-plt.xlabel('Age');
-plt.ylabel('Creatine');
-plt.legend(['Individual'])
+# plt.xlabel('Age');
+# plt.ylabel('Creatine');
+# plt.legend(['Individual'])
 plt.show()
 
 # Joel has features 1, 2, 3, 4
@@ -63,10 +63,10 @@ for x in range(4):
     print(f"    Mean: {np.mean(data[:, feat.value])}")
     print(f"    Median: {np.median(data[:, feat.value])}")
     print(f"    STD: {np.std(data[:, feat.value])}")
-    print(f"    Variance {np.var(data[:, feat.value])}")
+    print(f"    Variance {np.var([data[:, feat.value]])}")
     print(f"    Correlation with age: {np.corrcoef(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
-
-
+    print(f"    Covariance with age: {np.cov(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
+    print("\n")
 
 # Line skip
 print("\n")
