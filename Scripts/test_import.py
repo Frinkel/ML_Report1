@@ -31,6 +31,13 @@ class feature:
     diabetes = 3
     eject_fract = 4
     HBP = 5
+    platelets = 6
+    ser_creatine = 7
+    ser_sodium = 8
+    sex = 9
+    smoking = 10
+    time = 11
+    death = 12
 
 
 # Gets the age of observation 0
