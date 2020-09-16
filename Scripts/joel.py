@@ -27,9 +27,9 @@ import enum
 class Feature(enum.Enum):
     age = 0
     anaemia = 1
-    creatine = 2
+    CPK = 2
     diabetes = 3
-    eject_fract = 4
+    eject_fraction = 4
     HBP = 5
     platelets = 6
     ser_creatine = 7
@@ -39,25 +39,33 @@ class Feature(enum.Enum):
     time = 11
     death = 12
 
+
 # Gets the age of observation 0
 # print(data[:, 2])
 
-plt.plot(data[:, 0], data[:, 2], 'o')
-plt.title('Creatine explained by Age');
+# plt.plot(data[:, 0], data[:, 2], 'o')
+# plt.title('Creatine explained by Age');
 # plt.xlabel('Age');
 # plt.ylabel('Creatine');
 # plt.legend(['Individual'])
-plt.show()
+# plt.show()
 
 # Joel has features 1, 2, 3, 4
 
+def plot_with_deathevent(fdata, i, j):
+    for c in range(fdata.shape[0]):
+        class_mask = fdata[:, 12] == c
+        plt.plot(fdata[class_mask, i], fdata[class_mask, j], 'o', alpha=.3)
+    plt.legend(["Survivor", "Dead"])
+    plt.xlabel(Feature(i).name)
+    plt.ylabel(Feature(j).name)
+    plt.show()
 
-# FEATURE 02 - ANAEMIA
+# plot_with_deathevent(data, 4, 8)
 
-# Desc:
-# Having decreased amount of red blood cells or hemoglobin
+# Get summary statistics for features 1, 2, 3 and 4
 for x in range(4):
-    feat = Feature(x+1)
+    feat = Feature(x + 1)
     print(f"## {feat.name.upper()} ##")
     print(f"    Mean: {np.mean(data[:, feat.value])}")
     print(f"    Median: {np.median(data[:, feat.value])}")
@@ -67,12 +75,8 @@ for x in range(4):
     print(f"    Covariance with age: {np.cov(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
     print("\n")
 
+    #plot_with_deathevent(data, 0, feat.value)
+
 # Line skip
 print("\n")
 
-# FEATURE 03 - CREATINE
-
-# Desc:
-#
-# print("## CREATINE ##")
-# print(f"    Mean: {np.mean(data[:, Feature.creatine.value])}")
