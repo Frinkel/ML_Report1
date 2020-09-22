@@ -4,6 +4,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from main import *
 import enum
+import sys
+
 
 
 # Data contains 13 features and 299 observations
@@ -64,19 +66,24 @@ def plot_with_deathevent(fdata, i, j):
 # plot_with_deathevent(data, 4, 8)
 
 # Get summary statistics for features 1, 2, 3 and 4
-for x in range(4):
-    feat = Feature(x + 1)
-    print(f"## {feat.name.upper()} ##")
-    print(f"    Mean: {np.mean(data[:, feat.value])}")
-    print(f"    Median: {np.median(data[:, feat.value])}")
-    print(f"    STD: {np.std(data[:, feat.value])}")
-    print(f"    Variance {np.var([data[:, feat.value]])}")
-    print(f"    Correlation with age: {np.corrcoef(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
-    print(f"    Covariance with age: {np.cov(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
-    print("\n")
+def extractDataInformation(N):
+    for x in range(N):
+        feat = Feature(x + 1)
+        print(f"## {feat.name.upper()} ##")
+        print(f"    Mean: {np.mean(data[:, feat.value])}")
+        print(f"    Median: {np.median(data[:, feat.value])}")
+        print(f"    STD: {np.std(data[:, feat.value])}")
+        print(f"    Variance {np.var([data[:, feat.value]])}")
+        print(f"    Correlation with age: {np.corrcoef(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
+        print(f"    Covariance with age: {np.cov(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
+        print("\n")
 
     #plot_with_deathevent(data, 0, feat.value)
 
+
 # Line skip
-print("\n")
+#print("\n")
+#np.set_printoptions(threshold=sys.maxsize)
+print(df.corr().to_numpy())
+
 
