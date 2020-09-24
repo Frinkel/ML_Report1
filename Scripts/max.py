@@ -22,39 +22,99 @@ from enum import Enum
 # 10 = smoking                  - boolean
 # 11 = time                     - int
 # 12 = death event              - boolean
+ 
+    
+# We start by making the data matrix X by indexing into data.
+# We know that the attributes are stored in the columns from inspecting 
+# the file.
+cols = range(0, 13) 
+X = data[:, cols]
+K = np.empty((299, 1))
 
-# Enumerate the different features
-class feature:
-    age = 0
-    anaemia = 1
-    creatine = 2
-    diabetes = 3
-    eject_fract = 4
-    HBP = 5
+#p = df.describe()
 
+# We can extract the attribute names that came from the header of the csv
+attributeNames = np.asarray(df.columns[cols])
 
-# Gets the age of observation 0
-# print(data[:, 0])
+N, M = X.shape
 
-# plt.plot(data[:, 0], data[:, 6], 'o')
-# plt.show()
+summary_Array = []
+arr = []
+j = 0
 
-# Print certain type of data that is above a threshold
-feature_type = 0
-threshold = 600000
+# Compute values
+for i in range(1,12):
+    #0 Mean
+    arr.append(data[:,i].mean())
+    
+    #1 STD
+    arr.append(data[:,i].std(ddof=1))
+    
+    #2 Median
+    arr.append(np.median(data[:,i]))
+    
+    #3 Var
+    arr.append(np.var(data[:,i]))
+    
+    #4 Range
+    arr.append(data[:,i].max()-data[:,i].min())
+    
+    Q1 = np.percentile(data[:, i], 50)
+    Q2 = np.percentile(data[:, i], 25)
+    Q3 = np.percentile(data[:, i], 75)
+    
+    IQR = Q3-Q2
+    innerFBound = IQR * 1.5
+    innerFSmall = Q1 - innerFBound
+    innerFLarge = Q3 + innerFBound
+    
+    #5 innerFenceBoundSmall
+    arr.append(innerFSmall)
+    
+    #6 innerFenceBoundLarge
+    arr.append(innerFLarge)   
+    
+    #7 min
+    arr.append(data[:,i].min())
+    
+    #8 max
+    arr.append(data[:,i].max())
+    
+    K = data[:, i]
+   
+    outliersLow = (K < innerFSmall) * K
+    outliersHigh = (K > innerFLarge) * K
+            
+    arr.insert(11, outliersLow)
+    arr.insert(12, outliersHigh)
+    
+    summary_Array.insert(j, arr)
+   
+    arr = []
+    
+    j += 1
 
-# Print certain type of data that is above a threshold
-def thresholdExtraction(fdata, ftype, fthreshold):
-    for c in fdata:
-        if (c[ftype] >= fthreshold):
-            print(f"Age: {c[feature.age]}, Creatine: {c[2]}, Is a smoker: {bool(c[10])}, Woman/Man: {c[9]}")
+del summary_Array[0]
+del summary_Array[1]
+del summary_Array[2]
+del summary_Array[5]
+del summary_Array[5]
 
+#Sorting rows by death or not
+temp = np.argsort(X[:, 12], axis=0)
+SortedSurvival = X[temp.ravel(), :]
 
-# Cal culate the mean of a column
-def mean(fdata, fcol):
-    fmean = sum(fdata[:, fcol]) / fdata.shape[0]
-    return fmean
+#S = survived patients, D = dead patients
+S, D = SortedSurvival[0:203, :], SortedSurvival[203:, :]
 
+#Selecting saught after values
+A, B = S[:, 6], D[:, 6]
 
-print(f"Mean:  {mean(data, feature_type)}")
-thresholdExtraction(data, feature_type, mean(data, feature_type))
+values = A, B
+
+#Box plot
+fig, ax1 = plt.subplots()
+bp = ax1.boxplot(values)
+ax1.set_title()
+ax1.set_xlabel(attributeNames[2])
+plt.show()
