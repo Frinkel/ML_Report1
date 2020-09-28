@@ -84,7 +84,7 @@ for i in range(1,12):
    
     outliersLow = (K < innerFSmall) * K
     outliersHigh = (K > innerFLarge) * K
-            
+            s
     arr.insert(11, outliersLow)
     arr.insert(12, outliersHigh)
     
@@ -108,13 +108,15 @@ SortedSurvival = X[temp.ravel(), :]
 S, D = SortedSurvival[0:203, :], SortedSurvival[203:, :]
 
 #Selecting saught after values
-A, B = S[:, 6], D[:, 6]
+A, B = S[:, 2], D[:, 2]
 
 values = A, B
 
 #Box plot
 fig, ax1 = plt.subplots()
-bp = ax1.boxplot(values)
-ax1.set_title()
-ax1.set_xlabel(attributeNames[2])
+ax1.boxplot(values)
+ax1.set_title("Box-plot of " + attributeNames[2], fontsize=15)
+ax1.set_ylabel("%", fontsize=15)
+plt.xticks(range(1,3), (0, 1))
+ax1.set_xticklabels(['Censored', 'Dead'], fontsize=15)
 plt.show()
