@@ -84,7 +84,7 @@ for i in range(1,12):
    
     outliersLow = (K < innerFSmall) * K
     outliersHigh = (K > innerFLarge) * K
-    
+
     arr.insert(11, outliersLow)
     arr.insert(12, outliersHigh)
     
