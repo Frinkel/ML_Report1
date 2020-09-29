@@ -92,30 +92,34 @@ def extractDataInformation(N):
 #print(data.shape[1])
 
 
-def scatterplotHist(data):
-    fig, axs = plt.subplots(13, 13)
-    fig.suptitle("Scatterplots of all attributes")
 
-    for x in range(data.shape[1]):
-        for y in range(data.shape[1]):
+#print(df.corr().to_numpy())
 
-            if (x == y):
-                axs[x, y].hist(data[:,x], density=True, bins=5, rwidth=0.9, color="sandybrown")
-            elif(x < y):
-                axs[x, y].scatter(data[:, y], data[:, x], s=8, color = "lightseagreen")
-            else:
-                axs[x, y].scatter(data[:, x], data[:, y], s=8, color="lightseagreen")
+print(data.shape[1])
 
-            if(x < 1):
-                axs[x, y].set_title(f"{Feature(y).name}")
 
-            if(y < 1):
-                axs[x, y].set_title(f"{Feature(x).name}", x = -0.9, y = 0.3, loc = "left")
+fig, axs = plt.subplots(13, 13)
+fig.suptitle("Scatterplots of all attributes")
 
-            axs[x, y].xaxis.set_visible(False)
-            axs[x, y].yaxis.set_visible(False)
-            axs[x, y].label_outer()
+for x in range(data.shape[1]):
+    for y in range(data.shape[1]):
 
-            plt.show()
+        if (x == y):
+            axs[x, y].hist(data[:,x], density=True, bins=5, rwidth=0.9, color="sandybrown")
+        elif(x < y):
+            axs[x, y].scatter(data[:, y], data[:, x], s=8, color = "lightseagreen")
+        else:
+            axs[x, y].scatter(data[:, x], data[:, y], s=8, color="lightseagreen")
+
+        if(x < 1):
+            axs[x, y].set_title(f"{Feature(y).name}")
+
+        if(y < 1):
+            axs[x, y].set_title(f"{Feature(x).name}", x = -0.9, y = 0.3, loc = "left")
+
+        axs[x, y].xaxis.set_visible(False)
+        axs[x, y].yaxis.set_visible(False)
+        axs[x, y].label_outer()
 
 #scatterplotHist(data)
+plt.show()
