@@ -26,7 +26,7 @@ import sys
 # 12 = death event              - boolean
 
 # Enumerate the different features
-from Scripts.main import data
+from main import data
 
 
 class Feature(enum.Enum):
