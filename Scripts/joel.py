@@ -81,7 +81,7 @@ def extractDataInformation(N):
         print(f"    Covariance with age: {np.cov(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
         print("\n")
 
-    #plot_with_deathevent(data, 0, feat.value)
+#plot_with_deathevent(data, 0, feat.value)
 
 
 # Line skip
@@ -89,39 +89,33 @@ def extractDataInformation(N):
 #np.set_printoptions(threshold=sys.maxsize)
 #print(df.corr().to_numpy())
 
-print(data.shape[1])
+#print(data.shape[1])
 
 
-fig, axs = plt.subplots(13, 13)
-fig.suptitle("Scatterplots of all attributes")
+def scatterplotHist(data):
+    fig, axs = plt.subplots(13, 13)
+    fig.suptitle("Scatterplots of all attributes")
 
-for x in range(data.shape[1]):
-    for y in range(data.shape[1]):
+    for x in range(data.shape[1]):
+        for y in range(data.shape[1]):
 
-        if (x == y):
-            axs[x, y].hist(data[:,x], density=True, bins=5, rwidth=0.9, color="sandybrown")
-        elif(x < y):
-            axs[x, y].scatter(data[:, y], data[:, x], s=8, color = "lightseagreen")
-        else:
-            axs[x, y].scatter(data[:, x], data[:, y], s=8, color="lightseagreen")
+            if (x == y):
+                axs[x, y].hist(data[:,x], density=True, bins=5, rwidth=0.9, color="sandybrown")
+            elif(x < y):
+                axs[x, y].scatter(data[:, y], data[:, x], s=8, color = "lightseagreen")
+            else:
+                axs[x, y].scatter(data[:, x], data[:, y], s=8, color="lightseagreen")
 
-        if(x < 1):
-            axs[x, y].set_title(f"{Feature(y).name}")
+            if(x < 1):
+                axs[x, y].set_title(f"{Feature(y).name}")
 
-        if(y < 1):
-            axs[x, y].set_title(f"{Feature(x).name}", x = -0.9, y = 0.3, loc = "left")
+            if(y < 1):
+                axs[x, y].set_title(f"{Feature(x).name}", x = -0.9, y = 0.3, loc = "left")
 
-        axs[x, y].xaxis.set_visible(False)
-        axs[x, y].yaxis.set_visible(False)
-        axs[x, y].label_outer()
+            axs[x, y].xaxis.set_visible(False)
+            axs[x, y].yaxis.set_visible(False)
+            axs[x, y].label_outer()
 
+            plt.show()
 
-
-'''
-#for x in range(data.shape[1]):
-plt.figure(figsize=(12,12))
-for x in range(data.shape[1]):
-    #print(f"{Feature(x).name} " f" {Feature(y).name}")
-    plt.subplot(data[:, x], data[:, x], x+1)
-'''
-plt.show()
+#scatterplotHist(data)
