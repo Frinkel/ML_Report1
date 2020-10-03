@@ -84,7 +84,7 @@ for i in range(1,12):
    
     outliersLow = (K < innerFSmall) * K
     outliersHigh = (K > innerFLarge) * K
-            s
+            
     arr.insert(11, outliersLow)
     arr.insert(12, outliersHigh)
     
@@ -101,22 +101,34 @@ del summary_Array[5]
 del summary_Array[5]
 
 #Sorting rows by death or not
-temp = np.argsort(X[:, 12], axis=0)
-SortedSurvival = X[temp.ravel(), :]
+temp1 = np.argsort(X[:, 12], axis=0)
+SortedSurvival = X[temp1.ravel(), :]
 
 #S = survived patients, D = dead patients
 S, D = SortedSurvival[0:203, :], SortedSurvival[203:, :]
 
 #Selecting saught after values
-A, B = S[:, 2], D[:, 2]
+A, B = S[:, 7], D[:, 7]
 
 values = A, B
 
 #Box plot
 fig, ax1 = plt.subplots()
-ax1.boxplot(values)
-ax1.set_title("Box-plot of " + attributeNames[2], fontsize=15)
-ax1.set_ylabel("%", fontsize=15)
-plt.xticks(range(1,3), (0, 1))
-ax1.set_xticklabels(['Censored', 'Dead'], fontsize=15)
+ax1.boxplot(X[:, 8], vert=False)
+ax1.set_title("Box-plot of " + attributeNames[8], fontsize=15)
+ax1.set_xlabel("mEq/L", fontsize=15)
+ax1.set_yticklabels([])
+#plt.xticks(range(1,3), (0, 1))
+#ax1.set_xticklabels(['Censored', 'Dead'], fontsize=15)
+
+#t = np.sort(X[:, 0])
+#binss = np.arange(0, 10, 0.2)
+
+fig, ax2 = plt.subplots()
+ax2.hist(values, histtype='bar')
+ax2.set_title("Histogram of " + attributeNames[4], fontsize=15)
+ax2.set_xlabel("Ejection fraction %", fontsize=15)
+ax2.set_ylabel("Patient count", fontsize=15)
+ax2.legend(['Censored', 'Dead'])
+
 plt.show()
