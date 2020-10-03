@@ -42,16 +42,22 @@ class feature:
     death = 12
 
 
-#--Principal Component Analysis - PCA ---(script 2.1.1-2.1.6)-----------------
-#Med binarye attributes
-
+#--Principal Component Analysis - PCA --(using scripts from excersixes week2)--
+#Binary features excluded in this analysis
 
 #Sæt data op som i bogen: X, N, M, y, C
 X = data
-y = X[:,-1] 
-X = X[:,0:12] #Excluded last coloumn since we use it to classify against.
+y = X[:,-1] #target attribute
+non_binary = (0, 2, 4, 6, 7 ,8, 11)
+X = X[:,(non_binary)] #Also excluded last coloumn since we use it to classify against
 N,M = X.shape
 attributeNames = np.asarray(df.columns[0:13])
+#Kortere navne på Attributes
+attributeNames[2] = 'CPK'
+attributeNames[4] = 'EF' 
+attributeNames[5] = 'HBP'
+attributeNames[7] = 'SC'
+attributeNames[8] = 'SS'
 
 #Klassificere som levende/død:
 classNames = np.array(["Censored", "Dead"])
@@ -95,7 +101,6 @@ plt.plot(range(1,len(rho)+1),rho,'o-')
 title('Variance explained by principal components');
 xlabel('Principal component');
 ylabel('Variance explained value');
-#--------------------------------------2.1.4 C=2 (død/levende)
 # Project the centered data onto principal component space
 Z = Y @ V
 
@@ -127,14 +132,22 @@ bw = .2
 r = np.arange(1,M+1)
 for i in pcs:    
     plt.bar(r+i*bw, V[:,i], width=bw)
-plt.xticks(r+bw, r-1) #så attributnummer passer med AttributeNames
-plt.xlabel('Attributes by number')
+plt.xticks(r+bw, attributeNames[([0, 2, 4, 6, 7 ,8, 11])]) #så attributnummer passer med AttributeNames
+plt.xlabel('Attributes')
 plt.ylabel('Component coefficients')
 plt.legend(legendStrs)
 plt.grid()
 plt.title('Heartfailure: PCA Component Coefficients')
 plt.show()
 
+# print("It seems that PC2 sort of divides 'dead' and 'not dead' patients. Inspection of the second principal component:")
+# print('PC2:')
+# print(V[:,1].T)
+
+# print('Consider the first observation:') # in normalized data
+# print(Y[0,:])
+# print('...and its projection onto PC2')
+# print(Y[0,:]@V[:,1])
 
 #--------------------------------------2.1.6
 # Plot attribute coefficients in principal component space
@@ -144,7 +157,7 @@ j = 1
 plt.figure()
 for att in range(V.shape[1]):
     plt.arrow(0,0, V[att,i], V[att,j])
-    #plt.text(V[att,i], V[att,j], attributeNames[att]) ikke pænt med navne oven i hinanden. Næste linje er dog ikke meget pænere.
+    #plt.text(V[att,i], V[att,j], attributeNames[att]) OBS! ikke pænt med navne oven i hinanden. Næste linje er dog ikke meget pænere.
     plt.text(V[att,i], V[att,j], att)
 plt.xlim([-1,1])
 plt.ylim([-1,1])
