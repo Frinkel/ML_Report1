@@ -26,7 +26,7 @@ import sys
 # 12 = death event              - boolean
 
 # Enumerate the different features
-from Scripts.main import data
+from main import data
 
 
 class Feature(enum.Enum):
@@ -81,12 +81,18 @@ def extractDataInformation(N):
         print(f"    Covariance with age: {np.cov(data[:, feat.value], data[:, Feature.age.value])[1][0]}")
         print("\n")
 
-    #plot_with_deathevent(data, 0, feat.value)
+#plot_with_deathevent(data, 0, feat.value)
 
 
 # Line skip
 #print("\n")
 #np.set_printoptions(threshold=sys.maxsize)
+#print(df.corr().to_numpy())
+
+#print(data.shape[1])
+
+
+
 #print(df.corr().to_numpy())
 
 print(data.shape[1])
@@ -115,13 +121,5 @@ for x in range(data.shape[1]):
         axs[x, y].yaxis.set_visible(False)
         axs[x, y].label_outer()
 
-
-
-'''
-#for x in range(data.shape[1]):
-plt.figure(figsize=(12,12))
-for x in range(data.shape[1]):
-    #print(f"{Feature(x).name} " f" {Feature(y).name}")
-    plt.subplot(data[:, x], data[:, x], x+1)
-'''
+#scatterplotHist(data)
 plt.show()

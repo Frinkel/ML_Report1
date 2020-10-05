@@ -84,7 +84,7 @@ for i in range(1,12):
    
     outliersLow = (K < innerFSmall) * K
     outliersHigh = (K > innerFLarge) * K
-            
+
     arr.insert(11, outliersLow)
     arr.insert(12, outliersHigh)
     
@@ -122,12 +122,12 @@ ax1.set_yticklabels([])
 #ax1.set_xticklabels(['Censored', 'Dead'], fontsize=15)
 
 #t = np.sort(X[:, 0])
-#binss = np.arange(0, 10, 0.2)
+nbins = 30
 
 fig, ax2 = plt.subplots()
-ax2.hist(values, histtype='bar')
-ax2.set_title("Histogram of " + attributeNames[4], fontsize=15)
-ax2.set_xlabel("Ejection fraction %", fontsize=15)
+ax2.hist(values, bins=nbins, histtype='bar')
+ax2.set_title("Distribution of " + attributeNames[7] + " vs " + attributeNames[12], fontsize=15)
+ax2.set_xlabel(attributeNames[7], fontsize=15)
 ax2.set_ylabel("Patient count", fontsize=15)
 ax2.legend(['Censored', 'Dead'])
 
