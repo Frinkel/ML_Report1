@@ -1,13 +1,8 @@
 # Import packages
-import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 from main import *
 import enum
 import scipy.stats as st
-
-
-from matplotlib.collections import LineCollection
 
 
 # Data contains 13 features and 299 observations
@@ -159,9 +154,6 @@ continuousData = data[:,vals]
 for i in range(continuousData.shape[1]):
     print(st.anderson(continuousData[:,i], dist = "norm"))
 
-# Plot the Correlation matrix
-correlationMatrix(continuousData, vals)
-
 # Plot the Histograms
 plotHistograms(continuousData, vals)
 
@@ -170,3 +162,6 @@ pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 print(df.corr())
+
+# Plot the Correlation matrix
+correlationMatrix(continuousData, vals)
