@@ -27,5 +27,7 @@ data = df.to_numpy()
 # 11 = time                     - int
 # 12 = death event              - boolean
 
-# Gets the age of observation 0
-#print(data[0,0])
+# Standardize the data
+standData = (data - np.mean(data)) / np.std(data)
+
+print(np.mean(standData))
