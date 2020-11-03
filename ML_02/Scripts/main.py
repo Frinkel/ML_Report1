@@ -2,6 +2,8 @@
 import numpy as np
 import pandas as pd
 import numpy as np
+import torch as t
+from scipy import stats
 
 # Load Cardiovascular disease data using pandas
 filename = '../Data/CVD-data.csv'
@@ -27,7 +29,7 @@ data = df.to_numpy()
 # 11 = time                     - int
 # 12 = death event              - boolean
 
-# Standardize the data
-standData = (data - np.mean(data)) / np.std(data)
+# Standardize the data, z-score
+# standData = (data - np.mean(data)) / np.std(data)
+standData = stats.zscore(data)
 
-print(np.mean(standData))
