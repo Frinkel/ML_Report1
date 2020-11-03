@@ -16,7 +16,7 @@ Test_EJ = np.empty(N)
 Test_SC = np.empty(N)
 
 def zero_rule_algorithm_regression(train, test):
-	prediction = sum(train) / float(len(train))
+	prediction = np.mean(train, axis=0)
 	predicted = [prediction for i in range(len(test))]
 	return predicted
 
