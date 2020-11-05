@@ -9,7 +9,7 @@ import torch
 from sklearn import model_selection
 from toolbox_02450 import train_neural_net, draw_neural_net
 from scipy import stats
-from ANNRegression import *
+#from joel.py import *
 
 # Data contains 13 features and 299 observations
 
@@ -51,7 +51,6 @@ class Feature(enum.Enum):
 
 # -------- FUNCTIONS
 
-# Get Data
 allAttributeNames = []
 print(data.shape[1])
 for x in range(data.shape[1]):
@@ -62,7 +61,7 @@ print(f"All attributes: \n {allAttributeNames} \n")
 target_feature = [7]
 predict_features = [2,4,6,8]
 
-y = data[:,target_feature]          # the target feature
+y = data[:,target_feature]            # the target feature
 X = data[:,predict_features]        # the predict features
 
 # Get the used attributenames
@@ -74,58 +73,55 @@ print(f"Input attributes: \n {attributeNames} \n")
 
 
 
-#ANN initialize - Joel
-vec_hidden_units = [1,2,3,4,5,6,7,8,9,10] # The range of hidden units to test
-ANN_val_error = {} # To store the validation error of each model
-
-# Setup a dict to store Error values for each hidden unit (key:map)
-for i in range(len(vec_hidden_units)):
-    ANN_val_error[i] = []   # ANN_val_error = [[1, [error1, error2, error3]], [2 [error1, error2, error3]], ..., n]
-
-def addToDict(dict, key, value):  # Adds a value to a speciffic key in a dict
-    dict[key].append(value)
-
-def minFromDict(dict):
-    min = 100
-    for key in range(len(dict)):
-
-        if dict[key] < min:
-            min = dict[key]
+#ANN init
+vec_hidden_units = [1,2,3,4,5,6,7,8,9,10]
 
 
 
-# Two level K1-, K2-fold crossvalidation
-oK = 10                 # Number of outer folds (K1)
-iK = 10                 # Number of inner folds (K2)
-s = 10                  # Number of models (I.e. Lambda and Hidden Unit values)
 
+
+
+
+
+
+# Two level K-fold crossvalidation
+oK = 10                 # Number of outer folds
+iK = 10                 # Number of inner folds
 oCV = model_selection.KFold(oK, shuffle=True)
 iCV = model_selection.KFold(iK, shuffle=True)
 
 # Outer fold
-for (ok, (Dpar, Dtrain)) in enumerate(oCV.split(X,y)):
-    print('\nOuter fold: {0}/{1}'.format(ok + 1, oK))
+for (ok, (outer_train_index, outer_test_index)) in enumerate(oCV.split(X,y)):
+    print('\nCrossvalidation outer fold: {0}/{1}'.format(ok + 1, oK))
+    #print(outer_train_index)
+    #print("\n")
+    #print(outer_test_index)
+
+    #print(X[outer_train_index, :]) # the predict
+    #print("\n")
+    #print(y[outer_train_index]) # the target
+
+
+
+    #for i in range(10):
+    #    print(i)
+    #    ANNRegression(X[outer_train_index, :], y[outer_train_index], vec_hidden_units[i])
 
     # Inner fold
-    for (ik, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :],y[Dpar])):
-        print('\n   Inner fold: {0}/{1}'.format(ik + 1, iK))
+    for (ik, (inner_train_index, inner_test_index)) in enumerate(iCV.split(X[outer_train_index, :],y[outer_train_index])):
+        print('\n   Crossvalidation inner fold: {0}/{1}'.format(ik + 1, iK))
+        #print(X[inner_train_index, :].shape) # the predict
+        #print("\n")
+        #print(len(y[inner_train_index])) # the target
 
-        # Gather the training and validation data
-        X_train = X[Dtrain, :]
-        y_train = y[Dtrain]
-        X_val = X[Dval, :]
-        y_val = y[Dval]
+        #Train each model
+        #ANN
 
-        for i in range(s):
-            #print(i)
+        #Linear regression
 
-            # Train the models
-            ANNError = ANNRegression(X_train, y_train, X_val, y_val, vec_hidden_units[i])
-            #ANNError = ANNRegression(X_train, y_train, X_val, y_val, vec_hidden_units[i]) # Returns the validation error
+        #Base model
 
-            addToDict(ANN_val_error, i, ANNError)
 
-    print(ANN_val_error)
-    quit(100)
+
 
 print('Ran two-level-cv.py')
