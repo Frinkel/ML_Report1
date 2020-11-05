@@ -48,42 +48,14 @@ class Feature(enum.Enum):
 
 
 
-
-#ANN initialize - Joel
-vec_hidden_units = [1,2,3,4,5,6,7,8,9,10] # The range of hidden units to test
-ANN_val_error = {} # To store the validation error of each model
-
-# Setup a dict to store Error values for each hidden unit (key:map)
-for i in range(len(vec_hidden_units)):
-    ANN_val_error[i] = []   # ANN_val_error = [[1, [error1, error2, error3]], [2 [error1, error2, error3]], ..., n]
-
-
-
 # -------- FUNCTIONS
-def addToDict(dict, key, value):  # Adds a value to a speciffic key in a dict
-    dict[key].append(value)
 
-def minFromDict(dict):
-    min = 100
-    for key in range(len(dict)):
-
-        if dict[key] < min:
-            min = dict[key]
-
-
-
-
-K = 10                 # Number of folds (K2)
-s = 10                  # Number of models (I.e. Lambda and Hidden Unit values)
-
-iCV = model_selection.KFold(K, shuffle=True)
-
-def ANNRegression(X, y, Dpar, n_hidden_units):
+def ANNRegression(X_train, y_train, X_val, y_val, n_hidden_units):
     # Parameters for neural network classifier
     #n_hidden_units = 4      # number of hidden units
     n_replicates = 1        # number of networks trained in each k-fold
     max_iter = 10000
-    N, M = Dpar.shape
+    N, M = X_train.shape
 
     # K-fold crossvalidation
     #K = 1                 # only three folds to speed up this example
@@ -118,13 +90,13 @@ def ANNRegression(X, y, Dpar, n_hidden_units):
     #print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))
 
     # Inner fold
-    for (k, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :],y[Dpar])):
-        print('\n   Inner fold: {0}/{1}'.format(k + 1, K))
+    for (ik, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :],y[Dpar])):
+        print('\n   Inner fold: {0}/{1}'.format(ik + 1, iK))
         # Extract training and test set for current CV fold, convert to tensors
-        X_train = torch.Tensor(X[Dtrain, :])
-        y_train = torch.Tensor(y[Dtrain])
-        X_test = torch.Tensor(X[Dval, :])
-        y_test = torch.Tensor(y[Dval])
+        X_train = torch.Tensor(X_train)
+        y_train = torch.Tensor(y_train)
+        X_test = torch.Tensor(X_val)
+        y_test = torch.Tensor(y_val)
 
         for i in range(s):
 

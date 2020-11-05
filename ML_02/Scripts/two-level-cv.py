@@ -74,26 +74,6 @@ print(f"Input attributes: \n {attributeNames} \n")
 
 
 
-#ANN initialize - Joel
-vec_hidden_units = [1,2,3,4,5,6,7,8,9,10] # The range of hidden units to test
-ANN_val_error = {} # To store the validation error of each model
-
-# Setup a dict to store Error values for each hidden unit (key:map)
-for i in range(len(vec_hidden_units)):
-    ANN_val_error[i] = []   # ANN_val_error = [[1, [error1, error2, error3]], [2 [error1, error2, error3]], ..., n]
-
-def addToDict(dict, key, value):  # Adds a value to a speciffic key in a dict
-    dict[key].append(value)
-
-def minFromDict(dict):
-    min = 100
-    for key in range(len(dict)):
-
-        if dict[key] < min:
-            min = dict[key]
-
-
-
 # Two level K1-, K2-fold crossvalidation
 oK = 10                 # Number of outer folds (K1)
 iK = 10                 # Number of inner folds (K2)
@@ -103,29 +83,44 @@ oCV = model_selection.KFold(oK, shuffle=True)
 iCV = model_selection.KFold(iK, shuffle=True)
 
 # Outer fold
-for (ok, (Dpar, Dtrain)) in enumerate(oCV.split(X,y)):
+for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     print('\nOuter fold: {0}/{1}'.format(ok + 1, oK))
 
+    # Gather the data
+    X_par = X[Dpar, :]
+    y_par = y[Dpar]
+    X_test = X[Dtest, :]
+    y_test = y[Dtest]
+
+    # Train models on Dpar
+        # Return best model trained
+    ANNError = ANNRegression(X, y, Dpar, vec_hidden_units[i])
+
+    # Test best model on Dtest
+        # Return Error
+
+
+
     # Inner fold
-    for (ik, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :],y[Dpar])):
-        print('\n   Inner fold: {0}/{1}'.format(ik + 1, iK))
+    #for (ik, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :],y[Dpar])):
+    #    print('\n   Inner fold: {0}/{1}'.format(ik + 1, iK))
 
         # Gather the training and validation data
-        X_train = X[Dtrain, :]
-        y_train = y[Dtrain]
-        X_val = X[Dval, :]
-        y_val = y[Dval]
+    #    X_train = X[Dtrain, :]
+    #    y_train = y[Dtrain]
+    #    X_val = X[Dval, :]
+    #    y_val = y[Dval]
 
-        for i in range(s):
+    #    for i in range(s):
             #print(i)
 
             # Train the models
-            ANNError = ANNRegression(X_train, y_train, X_val, y_val, vec_hidden_units[i])
+    #        ANNError = ANNRegression(X_train, y_train, X_val, y_val, vec_hidden_units[i])
             #ANNError = ANNRegression(X_train, y_train, X_val, y_val, vec_hidden_units[i]) # Returns the validation error
 
-            addToDict(ANN_val_error, i, ANNError)
+    #        addToDict(ANN_val_error, i, ANNError)
 
-    print(ANN_val_error)
+    print(ANNError)
     quit(100)
 
 print('Ran two-level-cv.py')
