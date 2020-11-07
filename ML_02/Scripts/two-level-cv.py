@@ -10,7 +10,7 @@ from sklearn import model_selection
 from toolbox_02450 import train_neural_net, draw_neural_net
 from scipy import stats
 from ANNRegression import *
-from lin_reg_func import *
+from Lin_reg_func import *
 from lin_reg_func_testerror import *
 
 # Data contains 13 features and 299 observations
@@ -84,7 +84,7 @@ s = 10                  # Number of models (I.e. Lambda and Hidden Unit values)
 oCV = model_selection.KFold(oK, shuffle=True)
 iCV = model_selection.KFold(iK, shuffle=True)
 
-lin_testerror = np.empty(len(oK))
+lin_testerror = np.empty(oK)
 
 # Outer fold
 for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
