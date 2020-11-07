@@ -6,7 +6,7 @@ def lin_reg_func_testerror(Dpar, features, targets, opt_lambda, Dtest):
     #If multiple targets a vector with optimal errors is returned
     
     import numpy as np
-    #!!! Sætte imports hvor???
+    #!!! Sætte imports  hvor???
     
     # make a copy of data
     data_func_train = np.copy(data[Dpar,:])
