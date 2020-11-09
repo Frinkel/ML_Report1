@@ -1,17 +1,16 @@
+import numpy as np
+import sklearn.linear_model as lm
+
+from sklearn import model_selection
+from toolbox_02450 import rlr_validate
 from main import *
+from matplotlib.pylab import (figure, semilogx, loglog, xlabel, ylabel, legend, title, subplot, show, grid)
 
 def lin_reg_func(Dpar, features, targets):
     #Data is in textbook format global scope. Arguments are
     # an index of observations, a list with features and a list with targets
     #Returns optimal regularization factor lambda
     #If multiple targets a vector with optimal lambdas is returned
-    
-    from matplotlib.pylab import (figure, semilogx, loglog, xlabel, ylabel, legend, title, subplot, show, grid)
-    import numpy as np
-    import sklearn.linear_model as lm
-    from sklearn import model_selection
-    from toolbox_02450 import rlr_validate
-    #!!! Sætte imports hvor???
     
     # make a copy of data
     data_func = np.copy(data[Dpar,:])
