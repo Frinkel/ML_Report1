@@ -1,3 +1,5 @@
+from main import *
+
 def lin_reg_func(Dpar, features, targets):
     #Data is in textbook format global scope. Arguments are
     # an index of observations, a list with features and a list with targets

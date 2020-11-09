@@ -1,3 +1,5 @@
+from main import *
+
 def lin_reg_func_testerror(Dpar, features, targets, opt_lambda, Dtest):
     #Data is in textbook format global scope. Arguments are 
     # an index to train on, a list with features, a list with targets, optimal

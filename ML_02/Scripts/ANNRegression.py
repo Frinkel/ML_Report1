@@ -51,17 +51,18 @@ class Feature(enum.Enum):
 
 #ANN initialize - Joel
 vec_hidden_units = [1,2,3,4,5,6,7,8,9,10] # The range of hidden units to test
-ANN_val_error = {} # To store the validation error of each model
-
-# Setup a dict to store Error values for each hidden unit (key:map)
-for i in range(len(vec_hidden_units)):
-    ANN_val_error[i] = []   # ANN_val_error = [[1, [error1, error2, error3]], [2 [error1, error2, error3]], ..., n]
-
 
 
 # -------- FUNCTIONS
 def addToDict(dict, key, value):  # Adds a value to a speciffic key in a dict
     dict[key].append(value)
+
+def removeFromDict(dict, key, value):
+    if value in dict[key]:
+        dict[key].remove(value)
+
+def getVal(dict, key):
+    return dict[key]
 
 def minFromDict(dict):
     min = 100
@@ -71,65 +72,51 @@ def minFromDict(dict):
             min = dict[key]
 
 
+def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
+
+    # Normalize
+    #X = stats.zscore(Xd)
+    #y = stats.zscore(yd)
+
+    ANN_val_error = {}  # To store the validation error of each model
+
+    # Setup a dict to store Error values for each hidden unit (key:map)
+    for i in range(len(vec_hidden_units)):
+        ANN_val_error[i] = []  # ANN_val_error = [[1, [error1, error2, error3]], [2 [error1, error2, error3]], ..., n]
 
 
-K = 10                 # Number of folds (K2)
-s = 10                  # Number of models (I.e. Lambda and Hidden Unit values)
-
-iCV = model_selection.KFold(K, shuffle=True)
-
-def ANNRegression(X, y, Dpar, n_hidden_units):
     # Parameters for neural network classifier
     #n_hidden_units = 4      # number of hidden units
     n_replicates = 1        # number of networks trained in each k-fold
     max_iter = 10000
-    N, M = Dpar.shape
+    N, M = X.shape
 
     # K-fold crossvalidation
-    #K = 1                 # only three folds to speed up this example
-    #CV = model_selection.KFold(K, shuffle=True)
-
-
-    # Setup figure for display of learning curves and error rates in fold
-    summaries, summaries_axes = plt.subplots(1,2, figsize=(10,5))
-    # Make a list for storing assigned color of learning curve for up to K=10
-    color_list = ['tab:orange', 'tab:green', 'tab:purple', 'tab:brown', 'tab:pink',
-                  'tab:gray', 'tab:olive', 'tab:cyan', 'tab:red', 'tab:blue']
-
-    # Define the model
-    model = lambda: torch.nn.Sequential(
-                        torch.nn.Linear(M, n_hidden_units), #M features to n_hidden_units
-                        torch.nn.Tanh(),   # 1st transfer function,
-                        torch.nn.Linear(n_hidden_units, 1), # n_hidden_units to 1 output neuron
-                        # no final tranfer function, i.e. "linear output"
-                        )
-    loss_fn = torch.nn.MSELoss() # notice how this is now a mean-squared-error loss
-
-    # ----------------------------------- Modificaiton
-    y_test_est_models = []
-    y_test_models = []
-
-
-
-
-    #print('Training model of type:\n\n{}\n'.format(str(model())))
-    errors = [] # make a list for storing generalizaition error in each loop
-    #for (k, (train_index, test_index)) in enumerate(CV.split(X,y)):
-    #print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))
+    #K = 3  # Number of folds (K2)
+    #s = 10  # Number of models (I.e. Lambda and Hidden Unit values)
+    iCV = model_selection.KFold(K, shuffle=True)
 
     # Inner fold
-    for (k, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :],y[Dpar])):
-        print('\n   Inner fold: {0}/{1}'.format(k + 1, K))
+    for (k, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :], y[Dpar])):
+        #print('\n   Inner fold: {0}/{1}'.format(k + 1, K))
         # Extract training and test set for current CV fold, convert to tensors
-        X_train = torch.Tensor(X[Dtrain, :])
-        y_train = torch.Tensor(y[Dtrain])
-        X_test = torch.Tensor(X[Dval, :])
-        y_test = torch.Tensor(y[Dval])
+        X_train = torch.Tensor(stats.zscore(X[Dtrain, :]))
+        y_train = torch.Tensor(stats.zscore(y[Dtrain]))
+        X_test = torch.Tensor(stats.zscore(X[Dval, :]))
+        y_test = torch.Tensor(stats.zscore(y[Dval]))
 
         for i in range(s):
+            print(f"Inner: {k}, Model: {i}")
+            # Define the model
+            model = lambda: torch.nn.Sequential(
+                torch.nn.Linear(M, vec_hidden_units[i]),  # M features to n_hidden_units
+                torch.nn.Tanh(),  # 1st transfer function,
+                torch.nn.Linear(vec_hidden_units[i], 1),  # n_hidden_units to 1 output neuron
+                # no final tranfer function, i.e. "linear output"
+            )
+            loss_fn = torch.nn.MSELoss()  # notice how this is now a mean-squared-error loss
 
-            # ----------------------------------- Modificaiton
-            y_test_models.append(y_test)
+            errors = []  # make a list for storing generalizaition error in each loop
 
             # Train the net on training data
             net, final_loss, learning_curve = train_neural_net(model,
@@ -139,37 +126,50 @@ def ANNRegression(X, y, Dpar, n_hidden_units):
                                                                n_replicates=n_replicates,
                                                                max_iter=max_iter)
 
-            print('\n\tBest loss: {}\n'.format(final_loss))
+            #print('\n\tBest loss: {}\n'.format(final_loss))
 
             # Determine estimated class labels for test set
             y_test_est = net(X_test)
-
-            # ----------------------------------- Modificaiton
-            y_test_est_models.append(y_test_est)
 
             # Determine errors and errors
             se = (y_test_est.float()-y_test.float())**2 # squared error
             mse = (sum(se).type(torch.float)/len(y_test)).data.numpy() #mean
             errors.append(mse) # store error rate for current CV fold
 
-
-            #print(f"Errors: {errors[1]}, y_test: {y_test_models}, y_test_est: {y_test_est_models}")
-            # Find the best model from the CV folds
-            # We do this by finding the model with lowest MSE
-            errorsID = []
-            for i in range(len(errors)):
-                print(errors[i])
-                errorsID.append([errors[i],i])
-
-            #maxError = max(errors[0], errors[1], errors[2])
-            bestError = []
-
-            #for i in range(len(errorsID)):
-            #    if(maxError == errorsID[i][0]):
-            #        bestError = errorsID[i]
-            #Largest MSE lowest loss?
-            #print(bestError)
+            # Only store the new error if its better than the previous
+            prevError = getVal(ANN_val_error, i)
+            #print(f"Prev: {prevError}, MSE: {mse}")
+            if not prevError: # Check whether there is an error
+                addToDict(ANN_val_error, i, mse)
+            elif mse < prevError:
+                removeFromDict(ANN_val_error, i, prevError)
+                addToDict(ANN_val_error, i, mse)
 
 
-    print('Ran joel.py')
-    return errors
+    # Find the best model from the CV folds
+    # We do this by finding the model with lowest MSE
+    bestError = getVal(ANN_val_error, 0)
+    for i in range(len(ANN_val_error) - 1):
+        if (getVal(ANN_val_error, i + 1) < bestError):
+            #print(f"Best Error: {bestError}")
+            removeFromDict(ANN_val_error, i, bestError)
+            bestError = getVal(ANN_val_error, i + 1)
+
+        elif getVal(ANN_val_error, i + 1):
+            removeFromDict(ANN_val_error, i + 1, getVal(ANN_val_error, i + 1))
+
+        else:
+            addToDict(ANN_val_error, i, getVal(ANN_val_error, i))
+
+    #print(ANN_val_error)
+
+    for i in range(len(ANN_val_error)):
+        val = getVal(ANN_val_error, i)
+        if val:
+            #print('Ran joel.py')
+            return [i + 1, val] # Plus one because the n-hidden-units starts with 1
+            #print([i,val])
+
+    #print(ANN_val_error)
+    #print('Ran joel.py')
+    #return errors

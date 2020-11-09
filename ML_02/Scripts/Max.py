@@ -56,4 +56,4 @@ def cross_fold_algorithm(X, y):
         print('Error Test', Error_test) 
         print('Error Train', Error_train)
             
-cross_fold_algorithm(X, Y_EJ)
+#cross_fold_algorithm(X, Y_EJ)
