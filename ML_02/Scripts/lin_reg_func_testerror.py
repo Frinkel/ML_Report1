@@ -17,7 +17,7 @@ def lin_reg_func_testerror(Dpar, features, targets, opt_lambda, Dtest):
     data_func_test = np.concatenate((np.ones((data_func_test.shape[0],1)),data_func_test),1)
     
     new_features = [x+1 for x in features] # because of added offset
-    new_features = np.concatenate(([0],features)) # add offset to feature list   
+    new_features = np.concatenate(([0],new_features)) # add offset to feature list   
     new_targets = [x+1 for x in targets]
     
     testerrors = np.empty(len(targets))
