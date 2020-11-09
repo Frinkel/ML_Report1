@@ -41,7 +41,7 @@ def cross_fold_algorithm(X, y):
                                       
        k += 1
        
-   print('Error Test', Error_test)
+   #print('Error Test', Error_test)
    
    return min(Error_test)
 

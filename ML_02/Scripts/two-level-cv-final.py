@@ -12,7 +12,7 @@ from scipy import stats
 from ANNRegression import *
 from Lin_reg_func import *
 from lin_reg_func_testerror import *
-from Max import *
+from baseline_model import *
 
 # Data contains 13 features and 299 observations
 
@@ -87,8 +87,13 @@ oCV = model_selection.KFold(oK, shuffle=True)
 iCV = model_selection.KFold(iK, shuffle=True)
 
 # Create an array to store linreg errors
-lin_testerror = np.empty(oK)
+lin_testerror = np.empty((oK,1))
 
+# Create an array to store baseline errors
+base_testerror = np.empty((oK, 1))
+
+# Incrementer
+K = 0
 # Outer fold
 for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     print('\nOuter fold: {0}/{1}'.format(ok + 1, oK))
@@ -96,18 +101,14 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Train models on Dpar
         # Return best model trained
     print("* Training Models *")
-    # Basic model
-    # cross_fold_algorithm(Dpar, Dtest)
-
+    
     # Lin Reg model
     opt_lambda = lin_reg_func(Dpar, predict_features, target_feature)
-    lin_testerror[oK] = lin_reg_func_testerror(Dpar, predict_features, target_feature, opt_lambda, Dtest)
+    lin_testerror[K] = lin_reg_func_testerror(Dpar, predict_features, target_feature, opt_lambda, Dtest)
 
     # ANN model
     ANNBestModel = ANNRegression(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
     print(f"ANN best model found = {ANNBestModel[0]} hidden units.")
-
-
 
 
     # Test best model on Dtest
@@ -120,6 +121,10 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
     print(f"ANN Generalisation error = {ANNGenError[1]} with {ANNBestModel[0]} hidden units.")
 
+    # Basic model
+    base_testerror[K] = cross_fold_algorithm(Dpar, Dtest)
+    
+    K += 1
     #Exit after first outer fold
     quit(100)
 
