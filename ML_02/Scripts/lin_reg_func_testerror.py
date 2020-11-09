@@ -1,3 +1,4 @@
+import numpy as np
 from main import *
 
 def lin_reg_func_testerror(Dpar, features, targets, opt_lambda, Dtest):
@@ -6,9 +7,6 @@ def lin_reg_func_testerror(Dpar, features, targets, opt_lambda, Dtest):
     # lambda and an index to test on
     #Returns return genrelaization error when tested on Dtest
     #If multiple targets a vector with optimal errors is returned
-    
-    import numpy as np
-    #!!! Sætte imports  hvor???
     
     # make a copy of data
     data_func_train = np.copy(data[Dpar,:])

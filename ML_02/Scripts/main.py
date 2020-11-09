@@ -30,5 +30,4 @@ data = df.to_numpy()
 
 # Standardize the data, z-score
 # standData = (data - np.mean(data)) / np.std(data)
-standData = stats.zscore(data)
-
+#standData = stats.zscore(data)

@@ -27,10 +27,9 @@ def cross_fold_algorithm(X, y):
    k = 0
    CV = model_selection.KFold(n_splits=K,shuffle=True)
        
-   Error_train = np.empty((K,1))
    Error_test = np.empty((K,1))
         
-   for train_index, test_index in CV.split(X, y):
+   for train_index, test_index in CV.split(X):
        
        # Extract test set for current CV fold
        y_test = y[test_index]

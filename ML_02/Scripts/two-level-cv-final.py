@@ -12,7 +12,7 @@ from scipy import stats
 from ANNRegression import *
 from Lin_reg_func import *
 from lin_reg_func_testerror import *
-from baseline_model import *
+from BM_model_test import *
 
 # Data contains 13 features and 299 observations
 
@@ -80,7 +80,7 @@ vec_hidden_units = [1,2,3,4,5,6,7,8,9,10]
 
 
 # Two level K1-, K2-fold crossvalidation
-oK = 3                 # Number of outer folds (K1)
+oK = 3                # Number of outer folds (K1)
 iK = 3                 # Number of inner folds (K2)
 
 oCV = model_selection.KFold(oK, shuffle=True)
@@ -122,10 +122,10 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     print(f"ANN Generalisation error = {ANNGenError[1]} with {ANNBestModel[0]} hidden units.")
 
     # Basic model
-    base_testerror[K] = cross_fold_algorithm(Dpar, Dtest)
-    
+    base_testerror[K] = bm_test_error(y, Dtest)
+
     K += 1
-    #Exit after first outer fold
+    # Exit after first outer fold
     quit(100)
 
 print('Ran two-level-cv.py')
