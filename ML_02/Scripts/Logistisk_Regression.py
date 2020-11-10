@@ -5,8 +5,8 @@ import sklearn.linear_model as lm
 from sklearn import model_selection
 from main import *
 
-all_features = [2,4,6,8,12]
-feature = [2,4,6,8]
+all_features = [0,2,4,6,8,12]
+feature = [0,2,4,6,7,8]
 target = [12]
 X = data[:, feature]
 y= data[:, target]
@@ -111,6 +111,6 @@ def train_test_model(Dpar, Dtest, features, targets, reg_param):
     
     return t_error_rate
 
-for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
-    result_lambda[ok] = log_reg_func(Dpar, feature, target)
-    print("t_error_rate", train_test_model(Dpar, Dtest, feature, target, result_lambda[ok]))
+#for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
+    #result_lambda[ok] = log_reg_func(Dpar, feature, target)
+    #print("t_error_rate", train_test_model(Dpar, Dtest, feature, target, result_lambda[ok]))
