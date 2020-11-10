@@ -106,8 +106,8 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     opt_lambda = lin_reg_func(Dpar, predict_features, target_feature)
 
     # ANN model
-    ANNBestModel = ANNRegression(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
-    print(f"ANN best model found = {ANNBestModel[0]} hidden units.")
+    #ANNBestModel = ANNRegression(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
+    #print(f"ANN best model found = {ANNBestModel[0]} hidden units.")
 
 
     # Test best model on Dtest
@@ -117,8 +117,8 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     lin_testerror[K] = lin_reg_func_testerror(Dpar, predict_features, target_feature, opt_lambda, Dtest)
     print(f"Lin Reg Generalisation error = {lin_testerror[K]}.")
     # ANN model
-    ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
-    print(f"ANN Generalisation error = {ANNGenError[1]} with {ANNBestModel[0]} hidden units.")
+    #ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
+    #print(f"ANN Generalisation error = {ANNGenError[1]} with {ANNBestModel[0]} hidden units.")
 
     # Basic model
     base_testerror[K] = bm_test_error(y, Dtest)
@@ -126,6 +126,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
 
     K += 1
     # Exit after first outer fold
-    quit(100)
+    #quit(100)
 
 print('Ran two-level-cv.py')
