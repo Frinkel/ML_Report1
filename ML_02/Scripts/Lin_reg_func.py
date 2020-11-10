@@ -18,7 +18,7 @@ def lin_reg_func(Dpar, features, targets):
     data_func = np.concatenate((np.ones((data_func.shape[0],1)),data_func),1)
     
     new_features = [x+1 for x in features] # because of added offset
-    new_features = np.concatenate(([0],features)) # add offset to feature list   
+    new_features = np.concatenate(([0],new_features)) # add offset to feature list   
     new_targets = [x+1 for x in targets]
 
     cvf = 10 # 10-fold cross-validation
