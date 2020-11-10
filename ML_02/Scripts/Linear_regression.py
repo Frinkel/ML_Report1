@@ -14,8 +14,8 @@ attributeNames = np.asarray(df.columns[0:13])
 attributeNames = np.append(['Offset'], attributeNames)
 
 #Sæt data op som i bogen: X, N, M, y
-features = [0,1,2,3,4,6,7,9,10,11] # Husk offset(0). Vi ville predicte ud fra features Creatinine phosphate(3), plattelets(7) and Serum sodium(9).
-targets = [5,8] # Already added offset, so ejection fratction is 5 and serum creatinine 8
+features = [0, 3, 5, 7, 9] # Husk offset(0). Vi ville predicte ud fra features Creatinine phosphate(3), plattelets(7) and Serum sodium(9).
+targets = [8] # Already added offset, so ejection fratction is 5 and serum creatinine 8
 cvf = 10 # 10-fold cross-validation
 K = cvf
 
@@ -80,7 +80,7 @@ for target in targets:
     opt_lambda_idx = np.argmin(Gen_error)
     
     
-    show()
+
     # Display results
     print('\n Regularized linear regression for predicting {0}:'.format(attributeNames[target]))
     print('Optimal regularization constant(lambda) suggested by {0}-fold crossvalidation is around {1}'.format(K, opt_lambda))
@@ -88,12 +88,10 @@ for target in targets:
 
     print('\n The means of the weights over the 10 folds using the optimal model were:')
     for feature in range(M):
-        #print(' la la {0}'.format(attributeNames[features[feature]))
         print('The weight of attribute {0} was {1} '.format(attributeNames[features[feature]], np.mean(w[feature,:,opt_lambda_idx])))
-        #print('The weight of attribute {0} was {1}'.format(attributeNames[features[feature]], np.mean(w[feature,:,opt_lambda_idx], axis=1)))
-        #!!!!!! hvorfor virker dette ikke??!?
+
     
-    
+    #Vis generlaization error og train error som funktion af lambda
     figure(figsize=(10,10)) 
     title('Optimal lambda: {0}'.format(opt_lambda))
     semilogx(lambdas,Train_error,'b.-', lambdas, Gen_error, 'r.-')
@@ -103,26 +101,26 @@ for target in targets:
     grid()
     show()  
 
-
+    # Vis du forskellige vægte (ikke biasvægt) som funktion af lambda
     figure(figsize=(12,12))
     semilogx(lambdas,np.mean(w[1:,:,:], axis=1).T,'.-') # Don't plot the bias term
     xlabel('Regularization factor')
     ylabel('Mean Coefficient Values')
     grid()
-    legend(attributeNames[1:], loc='best') #!!! omit this
+    legend(attributeNames[features[1:]], loc='best') #!!! omit this
     show()
     
     
     
     #!!!Slet alt herunder
     
-    figure(figsize=(10,10))
-    semilogx(lambdas, Gen_error,'r.-')
-    ylabel('Generalization error')
-    xlabel('Regularization strength, $\log_{10}(\lambda)$')
-    title('Estimated generalization error as a function of $\lambda$')
-    grid()
-    show()
+    # figure(figsize=(10,10))
+    # semilogx(lambdas, Gen_error,'r.-')
+    # ylabel('Generalization error')
+    # xlabel('Regularization strength, $\log_{10}(\lambda)$')
+    # title('Estimated generalization error as a function of $\lambda$')
+    # grid()
+    # show()
     
     
     # figure(figsize=(8,8)) 
