@@ -10,6 +10,7 @@ from sklearn import model_selection
 from toolbox_02450 import train_neural_net, draw_neural_net
 from scipy import stats
 from Logistisk_Regression import *
+from Baseline_classifier import *
 
 # Data contains 13 features and 299 observations
 
