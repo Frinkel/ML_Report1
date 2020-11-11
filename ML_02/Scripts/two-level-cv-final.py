@@ -76,21 +76,25 @@ print(f"Input attributes: \n {attributeNames} \n")
 
 
 # Define the range of hidden units should be tested
-vec_hidden_units = [1,2,3,4,5,6,7,8,9,10]
+vec_hidden_units = [1,2,3,4,5]
 
 
 # Two level K1-, K2-fold crossvalidation
-oK = 3                # Number of outer folds (K1)
-iK = 3                 # Number of inner folds (K2)
+oK = 10                # Number of outer folds (K1)
+iK = 10                # Number of inner folds (K2)
 
 oCV = model_selection.KFold(oK, shuffle=True)
 iCV = model_selection.KFold(iK, shuffle=True)
 
 # Create an array to store linreg errors
 lin_testerror = np.empty((oK,1))
+linReg_bestModel = []
 
 # Create an array to store baseline errors
 base_testerror = np.empty((oK, 1))
+
+# Create a dict to store the ANN errors
+ANN_gen_error = []
 
 # Incrementer
 K = 0
@@ -101,13 +105,13 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Train models on Dpar
         # Return best model trained
     print("* Training Models *")
-    
-    # Lin Reg model
-    opt_lambda = lin_reg_func(Dpar, predict_features, target_feature)
 
     # ANN model
-    #ANNBestModel = ANNRegression(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
-    #print(f"ANN best model found = {ANNBestModel[0]} hidden units.")
+    ANNBestModel = ANNRegression(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
+    print(f"ANN best model found = {ANNBestModel[0]} hidden units.")
+
+    # Lin Reg model
+    opt_lambda = lin_reg_func(Dpar, predict_features, target_feature)
 
 
     # Test best model on Dtest
@@ -116,9 +120,12 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Lin Reg model
     lin_testerror[K] = lin_reg_func_testerror(Dpar, predict_features, target_feature, opt_lambda, Dtest)
     print(f"Lin Reg Generalisation error = {lin_testerror[K]}.")
+    linReg_bestModel.append([opt_lambda[0], lin_testerror[K][0]]) # [Opt model, Gen error]
+
     # ANN model
-    #ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
-    #print(f"ANN Generalisation error = {ANNGenError[1]} with {ANNBestModel[0]} hidden units.")
+    ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
+    print(f"ANN Generalisation error = {ANNGenError[1][0][0]} with {ANNBestModel[0]} hidden units.")
+    ANN_gen_error.append([ANNBestModel[0], ANNGenError[1][0][0]]) # [Opt model, Gen error]
 
     # Basic model
     base_testerror[K] = bm_test_error(y, Dtest)
@@ -128,4 +135,8 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Exit after first outer fold
     #quit(100)
 
+
+print(f"All ANN errors: {ANN_gen_error}")
+print(f"All Lin errors: {linReg_bestModel}")
+print(f"All Base errors: {base_testerror}")
 print('Ran two-level-cv.py')
