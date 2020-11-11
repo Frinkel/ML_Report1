@@ -87,11 +87,10 @@ oCV = model_selection.KFold(oK, shuffle=True)
 iCV = model_selection.KFold(iK, shuffle=True)
 
 # Create an array to store linreg errors
-lin_testerror = np.empty((oK,1))
 linReg_bestModel = []
 
 # Create an array to store baseline errors
-base_testerror = np.empty((oK, 1))
+base_testerror = []
 
 # Create a dict to store the ANN errors
 ANN_gen_error = []
@@ -118,9 +117,9 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
         # Return Error
     print("* Testing Best Model *")
     # Lin Reg model
-    lin_testerror[K] = lin_reg_func_testerror(Dpar, predict_features, target_feature, opt_lambda, Dtest)
-    print(f"Lin Reg Generalisation error = {lin_testerror[K]}.")
-    linReg_bestModel.append([opt_lambda[0], lin_testerror[K][0]]) # [Opt model, Gen error]
+    lin_testerror = lin_reg_func_testerror(Dpar, predict_features, target_feature, opt_lambda, Dtest)
+    print(f"Lin Reg Generalisation error = {lin_testerror}.")
+    linReg_bestModel.append([opt_lambda[0], lin_testerror[0]]) # [Opt model, Gen error]
 
     # ANN model
     ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
@@ -128,14 +127,15 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     ANN_gen_error.append([ANNBestModel[0], ANNGenError[1][0][0]]) # [Opt model, Gen error]
 
     # Basic model
-    base_testerror[K] = bm_test_error(y, Dtest)
-    print(f"Base model generalisation error = {base_testerror[K]}")
+    base_error = bm_test_error(y, Dtest)
+    print(f"Base model generalisation error = {base_error}")
+    base_testerror.append(base_error)
 
     K += 1
     # Exit after first outer fold
     #quit(100)
 
-
+print("Final errors:")
 print(f"All ANN errors: {ANN_gen_error}")
 print(f"All Lin errors: {linReg_bestModel}")
 print(f"All Base errors: {base_testerror}")
