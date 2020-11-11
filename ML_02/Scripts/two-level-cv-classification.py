@@ -111,8 +111,8 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     #print(f"ANN Generalisation error = {ANNGenError[1]} with {ANNBestModel[0]} hidden units.")
 
     # Basic model
-    #base_testerror[K] = bm_test_error(y, Dtest)
-    #print(f"Base model generalisation error = {base_testerror[K]}")
+    base_testerror[K] = bm_test_error(Dpar, Dtest)
+    print(f"Base model generalisation error = {base_testerror[K]}")
 
     # Exit after first outer fold
     #quit(100)
