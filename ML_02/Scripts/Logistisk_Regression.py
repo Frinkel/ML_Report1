@@ -83,9 +83,10 @@ def train_test_model(Dpar, Dtest, features, targets, reg_param):
     data_func_test = np.copy(data[Dtest,:])
     
     X_train = data_func_train[:, features]
-    y_train = data_func_train[:, targets]
+    y_train = data_func_train[:, targets].ravel()
     X_test = data_func_test[:, features]
-    y_test = data_func_test[:, targets]
+    yy_test = data_func_test[:, targets]
+    y_test = data_func_test[:, targets].ravel()
     
     mu = np.mean(X_train, 0)
     sigma = np.std(X_train, 0)
@@ -94,7 +95,7 @@ def train_test_model(Dpar, Dtest, features, targets, reg_param):
     
     mdl = lm.LogisticRegression(penalty='l2', C=reg_param)
 
-    mdl.fit(X_train, y_train.ravel())
+    mdl.fit(X_train, y_train)
 
     y_train_est = mdl.predict(X_train).T
     y_test_est = mdl.predict(X_test).T
@@ -111,6 +112,6 @@ def train_test_model(Dpar, Dtest, features, targets, reg_param):
     
     return t_error_rate
 
-#for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
-    #result_lambda[ok] = log_reg_func(Dpar, feature, target)
-    #print("t_error_rate", train_test_model(Dpar, Dtest, feature, target, result_lambda[ok]))
+for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
+    result_lambda[ok] = log_reg_func(Dpar, feature, target)
+    print("t_error_rate", train_test_model(Dpar, Dtest, feature, target, result_lambda[ok]))
