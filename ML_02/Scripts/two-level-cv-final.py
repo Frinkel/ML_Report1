@@ -76,7 +76,7 @@ print(f"Input attributes: \n {attributeNames} \n")
 
 
 # Define the range of hidden units should be tested
-vec_hidden_units = [1,2,3,4,5]
+vec_hidden_units = [1,2,3,4,5,6]
 
 
 # Two level K1-, K2-fold crossvalidation
