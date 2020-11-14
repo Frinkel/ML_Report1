@@ -11,6 +11,7 @@ from toolbox_02450 import train_neural_net, draw_neural_net
 from scipy import stats
 from Logistisk_Regression import *
 from Baseline_classifier import *
+from ANNBinaryCalssification import *
 
 # Data contains 13 features and 299 observations
 
@@ -71,19 +72,23 @@ for i in range(len(predict_features)):
 #print(f"Input attributes: \n {attributeNames} \n")
 
 # Define the range of hidden units should be tested
-vec_hidden_units = [1,2,3,4,5,6,7,8,9,10]
+vec_hidden_units = [1,2,3,4,5,6]
 
 # Two level K1-, K2-fold crossvalidation
-oK = 10                # Number of outer folds (K1)
+oK = 2                # Number of outer folds (K1)
+iK = 10               # Number of inner fold (K2) only used by ANN
 
 oCV = model_selection.KFold(oK, shuffle=True)
+iCV = model_selection.KFold(iK, shuffle=True)
 
 # Create an array to store linreg errors
 log_testerror = np.empty((oK, 1))
 
 # Create an array to store baseline errors
-base_testerror = np.empty((oK, 1))
+base_testerror = []
 
+# Create a dict to store the ANN errors
+ANN_gen_error = []
 
 # Outer fold
 for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
@@ -94,28 +99,37 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     print("* Training Models *")
     
     # Lin Reg model
-    opt_lambda = log_reg_func(Dpar, predict_features, target_feature)
+    #opt_lambda = log_reg_func(Dpar, predict_features, target_feature)
 
     # ANN model
-    #ANNBestModel = ANNRegression(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
-    #print(f"ANN best model found = {ANNBestModel[0]} hidden units.")
+    ANNBestModel = ANNClassification(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
+    print(f"ANN best model found = {ANNBestModel[0]} hidden units.")
 
 
     # Test best model on Dtest
         # Return Error
     print("* Testing Best Model *")
     # Lin Reg model
+
     log_testerror[ok] = train_test_model(Dpar, Dtest, predict_features, target_feature, opt_lambda)
     print(f"Log Reg Generalisation error = {log_testerror[ok]}.")
+
     # ANN model
-    #ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
-    #print(f"ANN Generalisation error = {ANNGenError[1]} with {ANNBestModel[0]} hidden units.")
+    ANNGenError = ANNClassification(iK, X, y, Dtest, 1, [ANNBestModel[0]])
+    print(f"ANN Generalisation error = {ANNGenError[1][0][0]} with {ANNBestModel[0]} hidden units.")
+    ANN_gen_error.append([ANNBestModel[0], ANNGenError[1][0][0]])  # [Opt model, Gen error]
 
     # Basic model
-    base_testerror[ok] = bm_test_error(Dpar, Dtest)
-    print(f"Base model generalisation error = {base_testerror[ok]}")
+    base_test = bm_test_error(Dpar, Dtest)
+    print(f"Base model generalisation error = {base_test}")
+    base_testerror.append(base_test)
 
     # Exit after first outer fold
     #quit(100)
+
+print("")
+print("Final errors:")
+print(f"All ANN errors: {ANN_gen_error}")
+print(f"All Base errors: {base_testerror}")
 
 print('Ran two-level-cv.py')

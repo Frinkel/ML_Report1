@@ -60,10 +60,10 @@ print(f"All attributes: \n {allAttributeNames} \n")
 
 # Gather target feature and rest from the z-score standardized data
 target_feature = [12]
-predict_features = [4,7]
+predict_features = [11,7]
 
 y = data[:,target_feature]            # the target feature
-X = standData[:,predict_features]        # the predict features
+X = data[:,predict_features]        # the predict features
 N, M = X.shape
 C = 2
 classNames = ["live", "dead"]

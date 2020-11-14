@@ -4,10 +4,10 @@ from main import *
 import enum
 import matplotlib.pyplot as plt
 import numpy as np
-# from scipy.io import loadmat
+#from scipy.io import loadmat
 import torch
 from sklearn import model_selection
-from toolbox_02450 import train_neural_net, draw_neural_net
+from toolbox_02450 import train_neural_net, draw_neural_net, visualize_decision_boundary
 from scipy import stats
 
 # Data contains 13 features and 299 observations
@@ -30,7 +30,6 @@ from scipy import stats
 # Enumerate the different features
 from main import data
 
-
 # Create enumeration for easier access to values and names
 class Feature(enum.Enum):
     age = 0
@@ -48,11 +47,9 @@ class Feature(enum.Enum):
     death = 12
 
 
-# ANN initialize - Joel
-# vec_hidden_units = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # The range of hidden units to test
-
 
 # -------- FUNCTIONS
+
 def addToDict(dict, key, value):  # Adds a value to a speciffic key in a dict
     dict[key].append(value)
 
@@ -74,7 +71,7 @@ def minFromDict(dict):
             min = dict[key]
 
 
-def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
+def ANNClassification(K, X, y, Dpar, s, vec_hidden_units):
     # Normalize
     # X = stats.zscore(Xd)
     # y = stats.zscore(yd)
@@ -88,8 +85,8 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
     # Parameters for neural network classifier
     # n_hidden_units = 4      # number of hidden units
     n_replicates = 1  # number of networks trained in each k-fold
-    #max_iter = 10000
-    max_iter = 1000
+    max_iter = 10000
+    #max_iter = 1000
     N, M = X.shape
 
     # K-fold crossvalidation
@@ -99,27 +96,32 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
 
     # Inner fold
     for (k, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :], y[Dpar])):
-        # print('\n   Inner fold: {0}/{1}'.format(k + 1, K))
-        # Extract training and test set for current CV fold, convert to tensors
+
         X_train = torch.Tensor(stats.zscore(X[Dtrain, :]))
         y_train = torch.Tensor(stats.zscore(y[Dtrain]))
         X_test = torch.Tensor(stats.zscore(X[Dval, :]))
         y_test = torch.Tensor(stats.zscore(y[Dval]))
 
+
+
+        # Define the model structure
+        # n_hidden_units = 1  # number of hidden units in the signle hidden layer
         for i in range(s):
             print(f"Inner: {k}, Model: {i}")
-            # Define the model
+            # The lambda-syntax defines an anonymous function, which is used here to
+            # make it easy to make new networks within each cross validation fold
             model = lambda: torch.nn.Sequential(
-                torch.nn.Linear(M, vec_hidden_units[i]),  # M features to n_hidden_units
-                torch.nn.Tanh(),  # 1st transfer function,
-                torch.nn.Linear(vec_hidden_units[i], 1),  # n_hidden_units to 1 output neuron
-                # no final tranfer function, i.e. "linear output"
+                torch.nn.Linear(M, vec_hidden_units[i]),  # M features to H hiden units
+                # 1st transfer function, either Tanh or ReLU:
+                torch.nn.Tanh(),  # torch.nn.ReLU(),
+                torch.nn.Linear(vec_hidden_units[i], 1),  # H hidden units to 1 output neuron
+                torch.nn.Sigmoid()  # final tranfer function
             )
-            loss_fn = torch.nn.MSELoss()  # notice how this is now a mean-squared-error loss
 
-            errors = []  # make a list for storing generalizaition error in each loop
+            loss_fn = torch.nn.BCELoss()
 
-            # Train the net on training data
+            errors = [] # make a list for storing generalizaition error in each loop
+
             net, final_loss, learning_curve = train_neural_net(model,
                                                                loss_fn,
                                                                X=X_train,
@@ -127,24 +129,26 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
                                                                n_replicates=n_replicates,
                                                                max_iter=max_iter)
 
-            # print('\n\tBest loss: {}\n'.format(final_loss))
+            #print('\n\tBest loss: {}\n'.format(final_loss))
 
             # Determine estimated class labels for test set
-            y_test_est = net(X_test)
-
-            # Determine errors and errors
-            se = (y_test_est.float() - y_test.float()) ** 2  # squared error
-            mse = (sum(se).type(torch.float) / len(y_test)).data.numpy()  # mean
-            errors.append(mse)  # store error rate for current CV fold
+            y_sigmoid = net(X_test)  # activation of final note, i.e. prediction of network
+            y_test_est = (y_sigmoid > .5).type(dtype=torch.uint8)  # threshold output of sigmoidal function
+            y_test = y_test.type(dtype=torch.uint8)
+            # Determine errors and error rate
+            e = (y_test_est != y_test)
+            error_rate = (sum(e).type(torch.float) / len(y_test)).data.numpy()
+            errors.append(error_rate)  # store error rate for current CV fold
+            print('\n\tBest rate: {}\n'.format(error_rate))
 
             # Only store the new error if its better than the previous
             prevError = getVal(ANN_val_error, i)
             # print(f"Prev: {prevError}, MSE: {mse}")
             if not prevError:  # Check whether there is an error
-                addToDict(ANN_val_error, i, mse)
-            elif mse < prevError:
+                addToDict(ANN_val_error, i, error_rate)
+            elif error_rate < prevError:
                 removeFromDict(ANN_val_error, i, prevError)
-                addToDict(ANN_val_error, i, mse)
+                addToDict(ANN_val_error, i, error_rate)
 
     # Find the best model from the CV folds
     # We do this by finding the model with lowest MSE
@@ -169,7 +173,7 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
             # print('Ran joel.py')
             return [i + 1, val]  # Plus one because the n-hidden-units starts with 1
             # print([i,val])
+    # Print the average classification error rate
+    #print('\nGeneralization error/average error rate: {0}%'.format(round(100 * np.mean(errors), 4)))
 
-    # print(ANN_val_error)
-    # print('Ran joel.py')
-    # return errors
+#print('Ran ANNBinaryClassification.py')
