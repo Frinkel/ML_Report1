@@ -10,6 +10,7 @@ feature = [0,2,4,6,7,8]
 target = [12]
 X = data[:, feature]
 y= data[:, target]
+N, M = X.shape  
 
 oK = 10
 oCV = model_selection.KFold(oK, shuffle=True)
@@ -76,7 +77,7 @@ def log_reg_func(Dpar, features, targets):
     opt_lambda = lambda_interval[opt_lambda_idx]
     #print(min_error)
     
-    return opt_lambda
+    return opt_lambda, min_error, test_error_rate
 
 def train_test_model(Dpar, Dtest, features, targets, reg_param):
     data_func_train = np.copy(data[Dpar,:])
@@ -112,6 +113,7 @@ def train_test_model(Dpar, Dtest, features, targets, reg_param):
     
     return t_error_rate
 
-for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
-    result_lambda[ok] = log_reg_func(Dpar, feature, target)
-    print("t_error_rate", train_test_model(Dpar, Dtest, feature, target, result_lambda[ok]))
+#for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
+    #result_lambda[ok] = log_reg_func(Dpar, feature, target)
+    #print("t_error_rate", train_test_model(Dpar, Dtest, feature, target, result_lambda[ok]))
+
