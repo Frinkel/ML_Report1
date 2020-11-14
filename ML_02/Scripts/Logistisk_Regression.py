@@ -75,9 +75,9 @@ def log_reg_func(Dpar, features, targets):
     opt_lambda_idx = np.argmin(test_error_rate)
     min_error = test_error_rate[opt_lambda_idx]
     opt_lambda = lambda_interval[opt_lambda_idx]
-    #print(min_error)
+    #print(min_error
     
-    return opt_lambda, min_error, test_error_rate
+    return opt_lambda
 
 def train_test_model(Dpar, Dtest, features, targets, reg_param):
     data_func_train = np.copy(data[Dpar,:])
@@ -116,4 +116,3 @@ def train_test_model(Dpar, Dtest, features, targets, reg_param):
 #for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     #result_lambda[ok] = log_reg_func(Dpar, feature, target)
     #print("t_error_rate", train_test_model(Dpar, Dtest, feature, target, result_lambda[ok]))
-

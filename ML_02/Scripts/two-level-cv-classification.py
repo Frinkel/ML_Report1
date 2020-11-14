@@ -106,7 +106,7 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     print("* Testing Best Model *")
     # Lin Reg model
     log_testerror[ok] = train_test_model(Dpar, Dtest, predict_features, target_feature, opt_lambda)
-    print(f"Lin Reg Generalisation error = {log_testerror[ok]}.")
+    print(f"Log Reg Generalisation error = {log_testerror[ok]}.")
     # ANN model
     #ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
     #print(f"ANN Generalisation error = {ANNGenError[1]} with {ANNBestModel[0]} hidden units.")
