@@ -75,14 +75,14 @@ for i in range(len(predict_features)):
 vec_hidden_units = [1,2,3,4,5,6]
 
 # Two level K1-, K2-fold crossvalidation
-oK = 2                # Number of outer folds (K1)
+oK = 10                # Number of outer folds (K1)
 iK = 10               # Number of inner fold (K2) only used by ANN
 
 oCV = model_selection.KFold(oK, shuffle=True)
 iCV = model_selection.KFold(iK, shuffle=True)
 
 # Create an array to store linreg errors
-log_testerror = np.empty((oK, 1))
+log_testerror = []
 
 # Create an array to store baseline errors
 base_testerror = []
@@ -98,8 +98,8 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
         # Return best model trained
     print("* Training Models *")
     
-    # Lin Reg model
-    #opt_lambda = log_reg_func(Dpar, predict_features, target_feature)
+    # Log Reg model
+    opt_lambda = log_reg_func(Dpar, predict_features, target_feature)
 
     # ANN model
     ANNBestModel = ANNClassification(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
@@ -111,7 +111,8 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     print("* Testing Best Model *")
     # Lin Reg model
 
-    log_testerror[ok] = train_test_model(Dpar, Dtest, predict_features, target_feature, opt_lambda)
+    log_testerr = train_test_model(Dpar, Dtest, predict_features, target_feature, opt_lambda)
+    log_testerror.append([opt_lambda, log_testerr])
     print(f"Log Reg Generalisation error = {log_testerror[ok]}.")
 
     # ANN model
@@ -126,10 +127,20 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
 
     # Exit after first outer fold
     #quit(100)
+    
+l_errors = np.array(log_testerror)
+idx_LOG = np.argmin(l_errors[:,1])
+optimal_lambda = log_testerror[idx_LOG][0]
+
+ANN_errors = np.array(ANN_gen_error)
+idx_ANN = np.argmin(ANN_errors[:, 1])
+optimal_hidden = ANN_gen_error[idx_ANN][0]
 
 print("")
 print("Final errors:")
+print(f"All Log_reg opt-lambdas and errors: {log_testerror}")
 print(f"All ANN errors: {ANN_gen_error}")
 print(f"All Base errors: {base_testerror}")
+print()
 
 print('Ran two-level-cv.py')
