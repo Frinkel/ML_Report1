@@ -97,7 +97,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Train models on Dpar
         # Return best model trained
     print("* Training Models *")
-
     # Log Reg model
     opt_lambda = log_reg_func(Dpar, predict_features, target_feature)
 
@@ -108,7 +107,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Test best model on Dtest
         # Return Error
     print("* Testing Best Model *")
-
     # Log Reg model
     log_testerr = train_test_model(Dpar, Dtest, predict_features, target_feature, opt_lambda)
     log_testerror.append([opt_lambda, log_testerr])
