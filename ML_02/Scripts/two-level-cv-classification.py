@@ -97,7 +97,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Train models on Dpar
         # Return best model trained
     print("* Training Models *")
-    
 
     # Log Reg model
     opt_lambda = log_reg_func(Dpar, predict_features, target_feature)
