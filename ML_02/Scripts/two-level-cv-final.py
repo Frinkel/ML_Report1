@@ -112,7 +112,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Lin Reg model
     opt_lambda = lin_reg_func(Dpar, predict_features, target_feature)
 
-
     # Test best model on Dtest
         # Return Error
     print("* Testing Best Model *")

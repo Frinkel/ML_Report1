@@ -75,7 +75,7 @@ for i in range(len(predict_features)):
 vec_hidden_units = [1,2,3,4,5,6]
 
 # Two level K1-, K2-fold crossvalidation
-oK = 10                # Number of outer folds (K1)
+oK = 10               # Number of outer folds (K1)
 iK = 10               # Number of inner fold (K2) only used by ANN
 
 oCV = model_selection.KFold(oK, shuffle=True)
@@ -104,7 +104,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # ANN model
     ANNBestModel = ANNClassification(iK, X, y, Dpar, len(vec_hidden_units), vec_hidden_units)
     print(f"ANN best model found = {ANNBestModel[0]} hidden units.")
-
 
     # Test best model on Dtest
         # Return Error
@@ -141,6 +140,4 @@ print("Final errors:")
 print(f"All Log_reg opt-lambdas and errors: {log_testerror}")
 print(f"All ANN errors: {ANN_gen_error}")
 print(f"All Base errors: {base_testerror}")
-print()
-
 print('Ran two-level-cv.py')

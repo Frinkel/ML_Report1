@@ -8,7 +8,7 @@ from sklearn import model_selection
 from toolbox_02450 import train_neural_net, draw_neural_net, visualize_decision_boundary
 from scipy import stats
     
-def ANNCFN(X, y, Dtrain, Dtest, s, hidden_units):
+def ANNCFN(X, y, Dtrain, Dtest, hidden_units):
     # Normalize
     # X = stats.zscore(Xd)
     # y = stats.zscore(yd)
@@ -28,14 +28,13 @@ def ANNCFN(X, y, Dtrain, Dtest, s, hidden_units):
     X_test = torch.Tensor(stats.zscore(X[Dtest, :]))
     y_test = torch.Tensor(stats.zscore(y[Dtest]))
 
-
     # The lambda-syntax defines an anonymous function, which is used here to
     # make it easy to make new networks within each cross validation fold
     model = lambda: torch.nn.Sequential(
-        torch.nn.Linear(M, vec_hidden_units[i]),  # M features to H hiden units
+        torch.nn.Linear(M, hidden_units),  # M features to H hiden units
                 # 1st transfer function, either Tanh or ReLU:
         torch.nn.Tanh(),  # torch.nn.ReLU(),
-        torch.nn.Linear(vec_hidden_units[i], 1),  # H hidden units to 1 output neuron
+        torch.nn.Linear(hidden_units, 1),  # H hidden units to 1 output neuron
         torch.nn.Sigmoid()  # final tranfer function
     )
 
@@ -59,4 +58,4 @@ def ANNCFN(X, y, Dtrain, Dtest, s, hidden_units):
     error_rate = (sum(e).type(torch.float) / len(y_test)).data.numpy()
     errors.append(error_rate)  # store error rate for current CV fold
     
-    return error_rate
+    return y_test_est

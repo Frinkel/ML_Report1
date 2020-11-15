@@ -52,7 +52,7 @@ for train_index, val_index in CV.split(X,y):
                 
         trainErrors[k].append(np.sum(y_train_est != y_train) / len(y_train))
         genErrors[k].append(np.sum(y_test_est != y_val) / len(y_val))
-                
+        
 f += 1
 
 for n in range(0, len(lambda_interval)):
@@ -62,7 +62,6 @@ for n in range(0, len(lambda_interval)):
         test_error_rate[n] += (arr[y] * fold_size[y] / N)
         train_error_rate[n] += (arrr[y] * fold_size[y] / N)
 
-            
 #print(test_error_rate)
 opt_lambda_idx = np.argmin(test_error_rate)
 min_error = test_error_rate[opt_lambda_idx]
@@ -84,7 +83,3 @@ plt.legend(['Training error','Test error','Test minimum'],loc='upper right')
 plt.ylim([0, 4])
 plt.grid()
 plt.show()
-
-
-
-    
