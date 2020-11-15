@@ -66,7 +66,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     yhat.append(dy)
     y_true.append(y_test)
     
-    
 yhat = np.concatenate(yhat)
 yhat = yhat.astype(int)
 
