@@ -1,3 +1,4 @@
+# By Joel
 # Import packages
 import matplotlib.pyplot as plt
 from main import *
@@ -97,15 +98,11 @@ def ANNClassification(K, X, y, Dpar, s, vec_hidden_units):
     # Inner fold
     for (k, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :], y[Dpar])):
 
-        X_trainN = torch.Tensor(X[Dtrain, :])
-        y_trainN = torch.Tensor(y[Dtrain])
-        X_testN = torch.Tensor(X[Dval, :])
-        y_testN = torch.Tensor(y[Dval])
+        X_train = torch.Tensor(stats.zscore(X[Dtrain, :]))
+        y_train = torch.Tensor(stats.zscore(y[Dtrain]))
+        X_test = torch.Tensor(stats.zscore(X[Dval, :]))
+        y_test = torch.Tensor(stats.zscore(y[Dval]))
 
-        X_train = torch.Tensor((X[Dtrain, :] - np.mean(X[Dtrain, :])) / np.std(X[Dtrain, :]))
-        y_train = torch.Tensor((y[Dtrain] - np.mean(y[Dtrain])) / np.std(y[Dtrain]))
-        X_test = torch.Tensor((X[Dval, :] - np.mean(X[Dval, :])) / np.std(X[Dval, :]))
-        y_test = torch.Tensor((y[Dval] - np.mean(y[Dval])) / np.std(y[Dval]))
 
 
         # Define the model structure
