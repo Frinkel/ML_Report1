@@ -47,7 +47,7 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     dy.append( y_est_log )
     errors[0].append(np.sum(y_est_log != y_test[0]))
     
-    y_est_ANN =ANNCFN(X, y, Dpar, Dtest, hidden)
+    y_est_ANN = ANNCFN(X, y, Dpar, Dtest, hidden)
     y_test_ANN = torch.Tensor(y_test)
     y_test_ANN = y_test_ANN.type(dtype=torch.uint8)
     e = (y_est_ANN != y_test_ANN)
