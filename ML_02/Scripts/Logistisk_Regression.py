@@ -65,6 +65,7 @@ def log_reg_func(Dpar, features, targets):
             genErrors[k].append(np.sum(y_test_est != y_val) / len(y_val))
                 
     f += 1
+    
     #print(genErrors)
     for n in range(0, len(lambda_interval)):
         arr = genErrors.get(n)
@@ -104,13 +105,6 @@ def train_test_model(Dpar, Dtest, features, targets, reg_param):
     train_error_rate = np.sum(y_train_est != y_train) / len(y_train)
     t_error_rate = np.sum(y_test_est != y_test) / len(y_test)
     
-    #y_est_dead_prob = mdl.predict_proba(X_test)[:, 1]
-    
-    #y_est_alive_prob = mdl.predict_proba(X_test)[:, 0]
-    
-    #x_class = mdl.predict_proba(X_test)[0,1]
-    #print("X_class", x_class)
-    
     return t_error_rate
 
 def train_test_model1(Dpar, Dtest, features, targets, reg_param):
@@ -143,8 +137,3 @@ def train_test_model1(Dpar, Dtest, features, targets, reg_param):
     return results
 
 y_test_est = []
-
-#for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
-    #[ok] = log_reg_func(Dpar, feature, target)
-    #print("t_error_rate", 100*train_test_model(Dpar, Dtest, feature, target, result_lambda[ok]), "%")
-    #y_test_est.append(train_test_model1(Dpar, Dtest, feature, target, 24.420530945486547))
