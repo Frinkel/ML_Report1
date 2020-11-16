@@ -15,18 +15,28 @@ def ANNCFN(X, y, Dtrain, Dtest, hidden_units):
 
     # Parameters for neural network classifier
     n_replicates = 1  # number of networks trained in each k-fold
-    max_iter = 10000
+    max_iter = 1000
     #max_iter = 1000
     N, M = X.shape
 
     # K-fold crossvalidation
     # K = 3  # Number of folds (K2)
     # s = 10  # Number of models (I.e. Lambda and Hidden Unit values)
-
-    X_train = torch.Tensor(stats.zscore(X[Dtrain, :]))
-    y_train = torch.Tensor(stats.zscore(y[Dtrain]))
-    X_test = torch.Tensor(stats.zscore(X[Dtest, :]))
-    y_test = torch.Tensor(stats.zscore(y[Dtest]))
+    
+    X_train = X[Dtrain, :]
+    y_train = y[Dtrain]
+    X_test = X[Dtest, :]
+    y_test = y[Dtest]
+    
+    mu = np.mean(X_train, 0)
+    sigma = np.std(X_train, 0)
+    X_train = (X_train - mu) / sigma
+    X_test = (X_test - mu) / sigma
+    
+    X_train = torch.Tensor(X_train)
+    y_train = torch.Tensor(y_train)
+    X_test = torch.Tensor(X_test)
+    y_test = torch.Tensor(y_test)
 
     # The lambda-syntax defines an anonymous function, which is used here to
     # make it easy to make new networks within each cross validation fold

@@ -14,15 +14,14 @@ K = 10
 
 result_lambda = np.empty(K)
 
-CV = model_selection.KFold(K, shuffle=True)
+CV = model_selection.KFold(K, shuffle=True, random_state=1)
     
 f = 0
 y = y.squeeze()
 fold_size = np.empty(K)
-lambda_interval = np.logspace(-8, 2, 50)
+lambda_interval = np.logspace(-20, 10, 100)
 train_error_rate = np.zeros(len(lambda_interval))
 test_error_rate = np.zeros(len(lambda_interval))
-#coefficient_norm = np.zeros(len(lambda_interval))
 genErrors = dict()
 trainErrors = dict()
     
@@ -62,24 +61,21 @@ for n in range(0, len(lambda_interval)):
         test_error_rate[n] += (arr[y] * fold_size[y] / N)
         train_error_rate[n] += (arrr[y] * fold_size[y] / N)
 
-#print(test_error_rate)
 opt_lambda_idx = np.argmin(test_error_rate)
 min_error = test_error_rate[opt_lambda_idx]
 opt_lambda = lambda_interval[opt_lambda_idx]
-#print(min_error)
-    
+
 plt.figure(figsize=(8,8))
-#plt.plot(np.log10(lambda_interval), train_error_rate*100)
-#plt.plot(np.log10(lambda_interval), test_error_rate*100)
-#plt.plot(np.log10(opt_lambda), min_error*100, 'o')
+
 plt.semilogx(lambda_interval, train_error_rate*100)
 plt.semilogx(lambda_interval, test_error_rate*100)
 plt.semilogx(opt_lambda, min_error*100, 'o')
-plt.text(1e-8, 3, "Minimum test error: " + str(np.round(min_error*100,2)) + ' % at 1e' + str(np.round(np.log10(opt_lambda),2)))
+plt.text(1e-20, 3, "Minimum test error: " + str(np.round(min_error*100,2)) + ' % at 1e' + str(np.round(np.log10(opt_lambda),2)))
 plt.xlabel('Regularization strength, $\log_{10}(\lambda)$')
 plt.ylabel('Error rate (%)')
 plt.title('Classification error')
 plt.legend(['Training error','Test error','Test minimum'],loc='upper right')
 plt.ylim([0, 4])
+plt.xlim([1e-22, 1e22])
 plt.grid()
 plt.show()
