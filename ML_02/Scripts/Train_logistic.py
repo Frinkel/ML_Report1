@@ -16,7 +16,7 @@ y = data[:, target]
 
 N, M = X.shape
 
-K = 2
+K = 10
 
 CV = model_selection.KFold(K, shuffle=True, random_state=1)
 
@@ -48,5 +48,4 @@ for (k, (Dpar, Dtest)) in enumerate(CV.split(X,y)):
     b = mdl.intercept_[0]
     w_est = mdl.coef_[0]
     coefficient_norm = np.sqrt(np.sum(w_est**2))
-    
 
