@@ -13,6 +13,7 @@ from ANNRegression import *
 from Lin_reg_func import *
 from lin_reg_func_testerror import *
 from BM_model_test import *
+from ANNRegressionBase import *
 
 # Data contains 13 features and 299 observations
 
@@ -121,9 +122,10 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     linReg_bestModel.append([opt_lambda[0], lin_testerror[0]]) # [Opt model, Gen error]
 
     # ANN model
-    ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
-    print(f"ANN Generalisation error = {ANNGenError[1][0][0]} with {ANNBestModel[0]} hidden units.")
-    ANN_gen_error.append([ANNBestModel[0], ANNGenError[1][0][0]]) # [Opt model, Gen error]
+    #ANNGenError = ANNRegression(iK, X, y, Dtest, 1, [ANNBestModel[0]])
+    ANNGenError = ANN_regression_tester(Dpar, Dtest, X, y, ANNBestModel[0])
+    print(f"ANN Generalisation error = {ANNGenError} with {ANNBestModel[0]} hidden units.")
+    ANN_gen_error.append([ANNBestModel[0], ANNGenError[0]]) # [Opt model, Gen error]
 
     # Basic model
     base_error = bm_test_error(y, Dtest)

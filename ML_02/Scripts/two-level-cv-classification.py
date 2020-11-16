@@ -11,7 +11,7 @@ from toolbox_02450 import train_neural_net, draw_neural_net
 from scipy import stats
 from Logistisk_Regression import *
 from Baseline_classifier import *
-from ANNBinaryCalssification import *
+from ANNBinaryCalssification_NoFigs import *
 
 # Data contains 13 features and 299 observations
 
