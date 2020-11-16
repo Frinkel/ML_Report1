@@ -1,3 +1,4 @@
+# By Joel
 # Import packages
 import matplotlib.pyplot as plt
 from main import *
@@ -101,10 +102,26 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
     for (k, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :], y[Dpar])):
         # print('\n   Inner fold: {0}/{1}'.format(k + 1, K))
         # Extract training and test set for current CV fold, convert to tensors
-        X_train = torch.Tensor(stats.zscore(X[Dtrain, :]))
-        y_train = torch.Tensor(stats.zscore(y[Dtrain]))
-        X_test = torch.Tensor(stats.zscore(X[Dval, :]))
-        y_test = torch.Tensor(stats.zscore(y[Dval]))
+        #X_train = torch.Tensor(stats.zscore(X[Dtrain, :]))
+        #y_train = torch.Tensor(stats.zscore(y[Dtrain]))
+        #X_test = torch.Tensor(stats.zscore(X[Dval, :]))
+        #y_test = torch.Tensor(stats.zscore(y[Dval]))
+
+        X_train = X[Dtrain, :]
+        y_train = y[Dtrain]
+        X_test = X[Dval, :]
+        y_test = y[Dval]
+
+        mu = np.mean(X_train, 0)
+        sigma = np.std(X_train, 0)
+        X_train = (X_train - mu) / sigma
+        X_test = (X_test - mu) / sigma
+
+        X_train = torch.Tensor(X_train)
+        y_train = torch.Tensor(y_train)
+        X_test = torch.Tensor(X_test)
+        y_test = torch.Tensor(y_test)
+        N, M = X_train.shape
 
         for i in range(s):
             print(f"Inner: {k}, Model: {i}")

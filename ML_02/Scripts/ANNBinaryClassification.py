@@ -1,3 +1,4 @@
+# By Joel
 # Import packages
 import matplotlib.pyplot as plt
 from main import *
@@ -139,6 +140,7 @@ def ANNClassification(K, X, y, Dpar, s, vec_hidden_units):
             e = (y_test_est != y_test)
             error_rate = (sum(e).type(torch.float) / len(y_test)).data.numpy()
             errors.append(error_rate)  # store error rate for current CV fold
+            print('\n\tBest rate: {}\n'.format(error_rate))
 
             # Only store the new error if its better than the previous
             prevError = getVal(ANN_val_error, i)

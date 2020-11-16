@@ -41,8 +41,7 @@ for (ok, (Dpar, Dtest)) in enumerate(CV.split(X,y)):
     y_est_log = train_test_model1(Dpar, Dtest, features, target, log_reg_param)
     dy.append( y_est_log )
     
-    #ANN model
-    y_est_ANN =ANNCFN(X, y, Dpar, Dtest, hidden)
+    y_est_ANN = ANNCFN(X, y, Dpar, Dtest, hidden)
     y_test_ANN = torch.Tensor(y_test)
     y_test_ANN = y_test_ANN.type(dtype=torch.uint8)
     

@@ -11,7 +11,8 @@ from toolbox_02450 import train_neural_net, draw_neural_net
 from scipy import stats
 from Logistisk_Regression import *
 from Baseline_classifier import *
-from ANNBinaryCalssification import *
+from ANNBinaryClassification import *
+from ANNBinaryClassificationBase import *
 
 # Data contains 13 features and 299 observations
 
@@ -75,7 +76,7 @@ for i in range(len(predict_features)):
 vec_hidden_units = [1,2,3,4,5,6]
 
 # Two level K1-, K2-fold crossvalidation
-oK = 10               # Number of outer folds (K1)
+oK = 10                # Number of outer folds (K1)
 iK = 10               # Number of inner fold (K2) only used by ANN
 
 oCV = model_selection.KFold(oK, shuffle=True)
@@ -97,7 +98,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Train models on Dpar
         # Return best model trained
     print("* Training Models *")
-    
     # Log Reg model
     opt_lambda = log_reg_func(Dpar, predict_features, target_feature)
 
@@ -108,16 +108,20 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Test best model on Dtest
         # Return Error
     print("* Testing Best Model *")
-    # Lin Reg model
-
+    # Log Reg model
     log_testerr = train_test_model(Dpar, Dtest, predict_features, target_feature, opt_lambda)
     log_testerror.append([opt_lambda, log_testerr])
     print(f"Log Reg Generalisation error = {log_testerror[ok]}.")
 
     # ANN model
-    ANNGenError = ANNClassification(iK, X, y, Dtest, 1, [ANNBestModel[0]])
-    print(f"ANN Generalisation error = {ANNGenError[1][0][0]} with {ANNBestModel[0]} hidden units.")
-    ANN_gen_error.append([ANNBestModel[0], ANNGenError[1][0][0]])  # [Opt model, Gen error]
+    ANNGenError = ANNClassificationBase(Dpar, Dtest, X, y, ANNBestModel[0])
+    print(f"ANN Generalisation error = {ANNGenError[0]} with {ANNBestModel[0]} hidden units.")
+    ANN_gen_error.append([ANNBestModel[0], ANNGenError[0]])  # [Opt model, Gen error]
+
+    # Lin Reg model
+    #log_test = train_test_model(Dpar, Dtest, predict_features, target_feature, opt_lambda)
+    #print(f"Log Reg Generalisation error = {log_test}.")
+    #log_testerror.append(log_test)
 
     # Basic model
     base_test = bm_test_error(Dpar, Dtest)
@@ -127,9 +131,9 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     # Exit after first outer fold
     #quit(100)
     
-l_errors = np.array(log_testerror)
-idx_LOG = np.argmin(l_errors[:,1])
-optimal_lambda = log_testerror[idx_LOG][0]
+#l_errors = np.array(log_testerror)
+#idx_LOG = np.argmin(l_errors[:,1])
+#optimal_lambda = log_testerror[idx_LOG][0]
 
 ANN_errors = np.array(ANN_gen_error)
 idx_ANN = np.argmin(ANN_errors[:, 1])
@@ -139,5 +143,6 @@ print("")
 print("Final errors:")
 print(f"All Log_reg opt-lambdas and errors: {log_testerror}")
 print(f"All ANN errors: {ANN_gen_error}")
+#print(f"All Log errors: {log_testerror}")
 print(f"All Base errors: {base_testerror}")
 print('Ran two-level-cv.py')
