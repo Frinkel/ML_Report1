@@ -69,10 +69,26 @@ def ANN_regression_tester(Dpar, Dtest, X, y, n_hidden_units):
 
 
     # Extract training and test set, convert to tensors
-    X_train = torch.Tensor(stats.zscore(X[Dpar, :]))
-    y_train = torch.Tensor(stats.zscore(y[Dpar]))
-    X_test = torch.Tensor(stats.zscore(X[Dtest, :]))
-    y_test = torch.Tensor(stats.zscore(y[Dtest]))
+    #X_train = torch.Tensor(stats.zscore(X[Dpar, :]))
+    #y_train = torch.Tensor(stats.zscore(y[Dpar]))
+    #X_test = torch.Tensor(stats.zscore(X[Dtest, :]))
+    #y_test = torch.Tensor(stats.zscore(y[Dtest]))
+
+
+    X_train = X[Dpar, :]
+    y_train = y[Dpar]
+    X_test = X[Dtest, :]
+    y_test = y[Dtest]
+
+    mu = np.mean(X_train, 0)
+    sigma = np.std(X_train, 0)
+    X_train = (X_train - mu) / sigma
+    X_test = (X_test - mu) / sigma
+
+    X_train = torch.Tensor(X_train)
+    y_train = torch.Tensor(y_train)
+    X_test = torch.Tensor(X_test)
+    y_test = torch.Tensor(y_test)
     N, M = X_train.shape
 
     # Define the model

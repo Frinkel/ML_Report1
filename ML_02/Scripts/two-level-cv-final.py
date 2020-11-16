@@ -81,8 +81,8 @@ vec_hidden_units = [1,2,3,4,5,6]
 
 
 # Two level K1-, K2-fold crossvalidation
-oK = 10                # Number of outer folds (K1)
-iK = 10                # Number of inner folds (K2)
+oK = 2                # Number of outer folds (K1)
+iK = 2                # Number of inner folds (K2)
 
 oCV = model_selection.KFold(oK, shuffle=True)
 iCV = model_selection.KFold(iK, shuffle=True)
