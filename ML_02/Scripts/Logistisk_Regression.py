@@ -34,7 +34,6 @@ def log_reg_func(Dpar, features, targets):
     lambda_interval = np.logspace(-8, 2, 50)
     train_error_rate = np.zeros(len(lambda_interval))
     test_error_rate = np.zeros(len(lambda_interval))
-    #coefficient_norm = np.zeros(len(lambda_interval))
     genErrors = dict()
     
     for i in range(0, len(lambda_interval)):
@@ -66,17 +65,15 @@ def log_reg_func(Dpar, features, targets):
                 
     f += 1
     
-    #print(genErrors)
+
     for n in range(0, len(lambda_interval)):
         arr = genErrors.get(n)
         for y in range(0, K):
-            test_error_rate[n] += (arr[y] * fold_size[y] / N)
-            
-    #print(test_error_rate)
+            test_error_rate[n] += (arr[y] * fold_size[y] / N)    
+    
     opt_lambda_idx = np.argmin(test_error_rate)
     min_error = test_error_rate[opt_lambda_idx]
     opt_lambda = lambda_interval[opt_lambda_idx]
-    #print(min_error
     
     return opt_lambda
 

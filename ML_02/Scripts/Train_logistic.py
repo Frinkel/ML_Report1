@@ -22,6 +22,7 @@ CV = model_selection.KFold(K, shuffle=True, random_state=1)
 
 reg_param = 1e-8
 
+avgWeights = []
 
 for (k, (Dpar, Dtest)) in enumerate(CV.split(X,y)):
     
@@ -47,5 +48,10 @@ for (k, (Dpar, Dtest)) in enumerate(CV.split(X,y)):
     
     b = mdl.intercept_[0]
     w_est = mdl.coef_[0]
+    avgWeights.append(w_est.ravel())
     coefficient_norm = np.sqrt(np.sum(w_est**2))
+
+avgW = np.asarray(avgWeights)
+avgW = avgW.sum(axis=0) / 10
+
 
