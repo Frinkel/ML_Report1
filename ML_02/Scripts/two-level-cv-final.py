@@ -1,14 +1,7 @@
 # Import packages
-import matplotlib.pyplot as plt
 from main import *
 import enum
-import matplotlib.pyplot as plt
-import numpy as np
-#from scipy.io import loadmat
-import torch
 from sklearn import model_selection
-from toolbox_02450 import train_neural_net, draw_neural_net
-from scipy import stats
 from ANNRegression import *
 from Lin_reg_func import *
 from lin_reg_func_testerror import *
@@ -133,8 +126,6 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     base_testerror.append(base_error)
 
     K += 1
-    # Exit after first outer fold
-    #quit(100)
 
 print("Final errors:")
 print(f"All ANN errors: {ANN_gen_error}")

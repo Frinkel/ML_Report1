@@ -1,3 +1,4 @@
+# By Joel
 import numpy as np
 from sklearn import model_selection
 from scipy import stats
@@ -6,7 +7,6 @@ from lin_reg_func_testerror import *
 from BM_model_test import *
 from ANNRegressionBase import *
 from main import *
-
 
 features = [0,2,4,6,7,8]
 target = [12]
@@ -36,31 +36,15 @@ base_error = []
 
 for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     print(f"Fold: {ok}")
-    #y_test = y[Dtest]
-
-
-    # ANN vs Baseline
-    #ANN_estimates = Stat_ANN_regression_tester(Dpar, Dtest, X, y, hidden_units)
-    #print(ANN_estimates)
-    # Determine errors and errors
-    #y_test_ANN = torch.Tensor(y_test)
-    #y_test_ANN = y_test_ANN.type(dtype=torch.uint8)
-    #se = (ANN_estimates.float() - y_test_ANN.float()) ** 2  # squared error
-    #mse = (sum(se).type(torch.float) / len(y_test)).data.numpy()  # mean
-
-    #print(mse)
 
     mse_ann = ANN_regression_tester(Dpar, Dtest, X, y, hidden_units)
     ANN_error.append(mse_ann[0])
-    #print(mse_ann[0])
 
     mse_lin = lin_reg_func_testerror(Dpar, features, target, opt_lambda, Dtest)
     lin_error.append(mse_lin[0])
-    #print(mse_lin[0])
 
     mse_base = bm_test_error(y, Dtest)
     base_error.append(mse_base)
-    #print(mse_base)
 
 print(f"Final Errors:")
 print(ANN_error)
@@ -76,8 +60,6 @@ for i, j in listAB:
 
 zhatAB = np.mean(ANN_error)-np.mean(base_error)
 stdAB = np.std(zAB)
-#cdfLAB = norm.cdf(zAB, zhatAB, stdAB)
-#cdfUAB = norm.cdf(zAB, zhatAB, stdAB)
 
 CIAB = stats.t.interval(alpha=0.95,df=len(zAB)-1,loc=zhatAB,scale=stdAB)
 print(f"Confidence Interval: {CIAB}")
@@ -104,7 +86,6 @@ if stats.ttest_rel(lin_error, base_error)[1] < 0.05:
     print("H0 rejeted")
 else:
     print("H0 not rejected")
-
 
 print()
 print("ANN vs. Lin")

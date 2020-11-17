@@ -118,18 +118,12 @@ for (ok, (Dpar, Dtest)) in enumerate(oCV.split(X,y)):
     print(f"ANN Generalisation error = {ANNGenError[0]} with {ANNBestModel[0]} hidden units.")
     ANN_gen_error.append([ANNBestModel[0], ANNGenError[0]])  # [Opt model, Gen error]
 
-    # Lin Reg model
-    #log_test = train_test_model(Dpar, Dtest, predict_features, target_feature, opt_lambda)
-    #print(f"Log Reg Generalisation error = {log_test}.")
-    #log_testerror.append(log_test)
 
     # Basic model
     base_test = bm_test_error(Dpar, Dtest)
     print(f"Base model generalisation error = {base_test}")
     base_testerror.append(base_test)
 
-    # Exit after first outer fold
-    #quit(100)
     
 #l_errors = np.array(log_testerror)
 #idx_LOG = np.argmin(l_errors[:,1])
@@ -143,6 +137,5 @@ print("")
 print("Final errors:")
 print(f"All Log_reg opt-lambdas and errors: {log_testerror}")
 print(f"All ANN errors: {ANN_gen_error}")
-#print(f"All Log errors: {log_testerror}")
 print(f"All Base errors: {base_testerror}")
 print('Ran two-level-cv.py')

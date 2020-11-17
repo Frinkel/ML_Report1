@@ -3,13 +3,10 @@
 import matplotlib.pyplot as plt
 from main import *
 import enum
-import matplotlib.pyplot as plt
 import numpy as np
-# from scipy.io import loadmat
 import torch
 from sklearn import model_selection
 from toolbox_02450 import train_neural_net, draw_neural_net
-from scipy import stats
 
 # Data contains 13 features and 299 observations
 
@@ -76,9 +73,6 @@ def minFromDict(dict):
 
 
 def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
-    # Normalize
-    # X = stats.zscore(Xd)
-    # y = stats.zscore(yd)
 
     ANN_val_error = {}  # To store the validation error of each model
 
@@ -87,25 +81,15 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
         ANN_val_error[i] = []  # ANN_val_error = [[1, [error1, error2, error3]], [2 [error1, error2, error3]], ..., n]
 
     # Parameters for neural network classifier
-    # n_hidden_units = 4      # number of hidden units
     n_replicates = 1  # number of networks trained in each k-fold
-    #max_iter = 10000
-    max_iter = 1000
+    max_iter = 5000 # Change to 1000 for faster computation
     N, M = X.shape
 
     # K-fold crossvalidation
-    # K = 3  # Number of folds (K2)
-    # s = 10  # Number of models (I.e. Lambda and Hidden Unit values)
     iCV = model_selection.KFold(K, shuffle=True)
 
     # Inner fold
     for (k, (Dtrain, Dval)) in enumerate(iCV.split(X[Dpar, :], y[Dpar])):
-        # print('\n   Inner fold: {0}/{1}'.format(k + 1, K))
-        # Extract training and test set for current CV fold, convert to tensors
-        #X_train = torch.Tensor(stats.zscore(X[Dtrain, :]))
-        #y_train = torch.Tensor(stats.zscore(y[Dtrain]))
-        #X_test = torch.Tensor(stats.zscore(X[Dval, :]))
-        #y_test = torch.Tensor(stats.zscore(y[Dval]))
 
         X_train = X[Dtrain, :]
         y_train = y[Dtrain]
@@ -144,7 +128,6 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
                                                                n_replicates=n_replicates,
                                                                max_iter=max_iter)
 
-            # print('\n\tBest loss: {}\n'.format(final_loss))
 
             # Determine estimated class labels for test set
             y_test_est = net(X_test)
@@ -156,7 +139,7 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
 
             # Only store the new error if its better than the previous
             prevError = getVal(ANN_val_error, i)
-            # print(f"Prev: {prevError}, MSE: {mse}")
+
             if not prevError:  # Check whether there is an error
                 addToDict(ANN_val_error, i, mse)
             elif mse < prevError:
@@ -168,7 +151,6 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
     bestError = getVal(ANN_val_error, 0)
     for i in range(len(ANN_val_error) - 1):
         if (getVal(ANN_val_error, i + 1) < bestError):
-            # print(f"Best Error: {bestError}")
             removeFromDict(ANN_val_error, i, bestError)
             bestError = getVal(ANN_val_error, i + 1)
 
@@ -178,15 +160,7 @@ def ANNRegression(K, X, y, Dpar, s, vec_hidden_units):
         else:
             addToDict(ANN_val_error, i, getVal(ANN_val_error, i))
 
-    # print(ANN_val_error)
-
     for i in range(len(ANN_val_error)):
         val = getVal(ANN_val_error, i)
         if val:
-            # print('Ran joel.py')
             return [i + 1, val]  # Plus one because the n-hidden-units starts with 1
-            # print([i,val])
-
-    # print(ANN_val_error)
-    # print('Ran joel.py')
-    # return errors

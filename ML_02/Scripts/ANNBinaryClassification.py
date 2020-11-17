@@ -73,9 +73,6 @@ def minFromDict(dict):
 
 
 def ANNClassification(K, X, y, Dpar, s, vec_hidden_units):
-    # Normalize
-    # X = stats.zscore(Xd)
-    # y = stats.zscore(yd)
 
     ANN_val_error = {}  # To store the validation error of each model
 
@@ -84,15 +81,10 @@ def ANNClassification(K, X, y, Dpar, s, vec_hidden_units):
         ANN_val_error[i] = []  # ANN_val_error = [[1, [error1, error2, error3]], [2 [error1, error2, error3]], ..., n]
 
     # Parameters for neural network classifier
-    # n_hidden_units = 4      # number of hidden units
     n_replicates = 1  # number of networks trained in each k-fold
     max_iter = 10000
-    #max_iter = 1000
     N, M = X.shape
 
-    # K-fold crossvalidation
-    # K = 3  # Number of folds (K2)
-    # s = 10  # Number of models (I.e. Lambda and Hidden Unit values)
     iCV = model_selection.KFold(K, shuffle=True)
 
     # Inner fold
@@ -130,8 +122,6 @@ def ANNClassification(K, X, y, Dpar, s, vec_hidden_units):
                                                                n_replicates=n_replicates,
                                                                max_iter=max_iter)
 
-            #print('\n\tBest loss: {}\n'.format(final_loss))
-
             # Determine estimated class labels for test set
             y_sigmoid = net(X_test)  # activation of final note, i.e. prediction of network
             y_test_est = (y_sigmoid > .5).type(dtype=torch.uint8)  # threshold output of sigmoidal function
@@ -166,15 +156,9 @@ def ANNClassification(K, X, y, Dpar, s, vec_hidden_units):
         else:
             addToDict(ANN_val_error, i, getVal(ANN_val_error, i))
 
-    # print(ANN_val_error)
+
 
     for i in range(len(ANN_val_error)):
         val = getVal(ANN_val_error, i)
         if val:
-            # print('Ran joel.py')
             return [i + 1, val]  # Plus one because the n-hidden-units starts with 1
-            # print([i,val])
-    # Print the average classification error rate
-    #print('\nGeneralization error/average error rate: {0}%'.format(round(100 * np.mean(errors), 4)))
-
-#print('Ran ANNBinaryClassification.py')

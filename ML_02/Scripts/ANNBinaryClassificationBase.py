@@ -1,27 +1,16 @@
+# By Joel
 # Import packages
-import matplotlib.pyplot as plt
-import enum
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from sklearn import model_selection
 from toolbox_02450 import train_neural_net, draw_neural_net, visualize_decision_boundary
-from scipy import stats
     
 def ANNClassificationBase(Dtrain, Dtest, X, y, hidden_units):
-    # Normalize
-    # X = stats.zscore(Xd)
-    # y = stats.zscore(yd)
 
     # Parameters for neural network classifier
     n_replicates = 1  # number of networks trained in each k-fold
     max_iter = 10000
     #max_iter = 1000
     N, M = X.shape
-
-    # K-fold crossvalidation
-    # K = 3  # Number of folds (K2)
-    # s = 10  # Number of models (I.e. Lambda and Hidden Unit values)
 
     X_train = X[Dtrain, :]
     y_train = y[Dtrain]
