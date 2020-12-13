@@ -42,12 +42,12 @@ def averageDistance(init, l1):
     for x in l1:
         sum_l1 += np.sqrt(pow(np.abs(init - x), 2))
 
-    return sum_l1/l1_len
+    return sum_l1 / l1_len
 
 
 # Calculates the K nearest neighbor density. K = neighbors, distance = the average distance.
 def knnDensity(distance, K):
-    return 1/(1/K*distance)
+    return 1 / (1 / K * distance)
 
 
 # From https://gist.github.com/ramhiser/c990481c387058f3cce7
@@ -80,3 +80,11 @@ def jaccard(labels1, labels2):
         elif not comembership1 and comembership2:
             n01 += 1
     return float(n11) / (n11 + n10 + n01)
+
+
+
+# Calculates the confidence interval, df is the number of observations/tests
+def confidenceInterval(alpha, df, zhat, std):
+    return stats.t.interval(alpha=alpha, df=df - 1, loc=zhat, scale=std)
+# Example:
+# print(confidenceInterval(0.95, 5, 0.221, 0.054))
