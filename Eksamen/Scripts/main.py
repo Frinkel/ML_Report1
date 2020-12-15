@@ -47,7 +47,19 @@ def averageDistance(init, l1):
 
 # Calculates the K nearest neighbor density. K = neighbors, distance = the average distance.
 def knnDensity(distance, K):
-    return 1 / (1 / K * distance)
+    return 1 / ((1 / K) * (distance/K))
+
+def knnARD(distList, k):
+    d1 = knnDensity(distList[0], k)
+    sum = 0
+    for i in range(1, len(distList)):
+
+        sum += knnDensity(distList[i], k)
+
+    return d1/((1/k) * sum)
+# Example
+# print(knnARD([1.7 + 2.2, 1.8 + 1.7, 0.9 + 2.1], 2))
+
 
 
 # From https://gist.github.com/ramhiser/c990481c387058f3cce7
@@ -80,7 +92,6 @@ def jaccard(labels1, labels2):
         elif not comembership1 and comembership2:
             n01 += 1
     return float(n11) / (n11 + n10 + n01)
-
 
 
 # Calculates the confidence interval, df is the number of observations/tests
